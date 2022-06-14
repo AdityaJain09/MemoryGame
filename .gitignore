@@ -60,6 +60,7 @@ vcs.xml
 # project
 app/google-services.json
 app/release
+app/src/main/java/com/stark/memorygame/todos.kt
 
 # lint
 lint/intermediates/
