@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">permainan memori</string>
+    <string name="refresh" translatable="false">Menyegarkan</string>
+    <string name="change_board_size_text" translatable="false">Ubah Ukuran Papan</string>
+    <string name="create_custom_game" translatable="false">Buat permainan khusus</string>
+    <string name="create_custom_game_title" translatable="false">Buat game memori khusus</string>
+    <string name="download_custom_game" translatable="false">Unduh permainan khusus</string>
+    <string name="invalid_move" translatable="false">Gerakan Tidak Valid</string>
+    <string name="game_already_won" translatable="false">Permainan sudah berakhir</string>
+    <string name="game_won" translatable="false">Selamat, Anda memenangkan permainan</string>
+    <string name="total_pairs_text" translatable="false">Pasangan: %d / %d</string>
+    <string name="moves_text" translatable="false">Bergerak: %d</string>
+    <string name="alert_title" translatable="false">Peringatan</string>
+    <string name="game_restart_message" translatable="false">Apakah Anda yakin ingin memulai kembali permainan?</string>
+    <string name="no" translatable="false">Tidak</string>
+    <string name="yes" translatable="false">Ya</string>
+    <string name="confirm" translatable="false">Mengonfirmasi</string>
+    <string name="close" translatable="false">Menutup</string>
+    <string name="ok" translatable="false">Oke</string>
+    <string name="select_board_size" translatable="false">Pilih Ukuran Papan</string>
+    <string name="download_game" translatable="false">Unduh permainan</string>
+    <string name="quite_game_message" translatable="false">Apakah Anda yakin ingin keluar dari permainan ini?</string>
+    <string name="game_won_message" translatable="false">Selamat, Anda memenangkan permainan</string>
+    <string name="save" translatable="false">Menyimpan</string>
+    <string name="custom_game_name_hint" translatable="false">Nama permainan (contoh: \'panda_fun\')</string>
+    <string name="uploaded_message_info" translatable="false">Berhasil Diunggah! Ayo mainkan game ini %s</string>
+    <string name="photo_choose_title" translatable="false">Gambar Terpilih (%d / %d)</string>
+    <string name="read_write_permission_error" translatable="false">Anda harus menerima izin, untuk membuat game khusus</string>
+    <string name="photo_picking_error" translatable="false">Tidak dapat memilih foto, ada yang tidak beres</string>
+    <string name="game_creation_error" translatable="false">Gagal membuat game</string>
+    <string name="game_load_error" translatable="false">gagal memuat game.</string>
+    <string name="game_not_found_error" translatable="false">Maaf, tidak dapat menemukan game %s ini</string>
+    <string name="view_shrink_error" translatable="false">Segarkan game, jika tampilan tidak ditampilkan dengan benar</string>
+    <string name="duplicate_text" translatable="false">Kesalahan Duplikat</string>
+    <string name="game_name_conflict" translatable="false">Nama %s sudah ada, Silakan masukkan nama lain</string>
+    <string name="server_error" translatable="false">Terjadi Kesalahan Server</string>
+    <string name="image_uploading_error" translatable="false">Gagal mengunggah gambar</string>
+    <string name="easy_board_size" translatable="false">Mudah (4 x 2)</string>
+    <string name="medium_board_size" translatable="false">Sedang (6 x 3)</string>
+    <string name="hard_board_size" translatable="false">keras (6 x 4)</string>
+    <string name="network_error" translatable="false">Anda tidak terhubung ke internet</string>
+    <string name="no_name_error" translatable="false">Masukkan nama game untuk diunduh</string>
+</resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jogo da memória</string>
+    <string name="developer_name" translatable="false">Criado por Aditya ➡</string>
+    <string name="network_error" translatable="false">Sem conexão com a Internet</string>
+    <string name="no_name_error" translatable="false">Digite o nome do jogo para baixar</string>
+    <string name="hard_board_size" translatable="false">Difícil (6 x 4)</string>
+    <string name="medium_board_size" translatable="false">Médio (6 x 3)</string>
+    <string name="easy_board_size" translatable="false">Fácil (4 x 2)</string>
+    <string name="image_uploading_error" translatable="false">Falha ao enviar imagens</string>
+    <string name="server_error" translatable="false">Erro de servidor encontrado</string>
+    <string name="game_name_conflict" translatable="false">Já existe um nome %s. Por favor, digite outro nome</string>
+    <string name="duplicate_text" translatable="false">Erro duplicado</string>
+    <string name="view_shrink_error" translatable="false">Atualize o jogo, se as visualizações não forem renderizadas corretamente</string>
+    <string name="game_not_found_error" translatable="false">Desculpe, não foi possível encontrar este jogo %s</string>
+    <string name="game_load_error" translatable="false">falhou ao carregar o jogo.</string>
+    <string name="game_creation_error" translatable="false">Falha ao criar o jogo</string>
+    <string name="photo_picking_error" translatable="false">Não foi possível escolher as fotos, algo deu errado</string>
+    <string name="read_write_permission_error" translatable="false">Você precisa aceitar permissão, para criar um jogo personalizado</string>
+    <string name="photo_choose_title" translatable="false">Imagens escolhidas (%d / %d)</string>
+    <string name="uploaded_message_info" translatable="false">Carregado com sucesso! Vamos jogar este jogo %s</string>
+    <string name="custom_game_name_hint" translatable="false">Nome do jogo (exemplo: \'carros\')</string>
+    <string name="save" translatable="false">Salvar</string>
+    <string name="game_won_message" translatable="false">Parabéns, você ganhou o jogo</string>
+    <string name="quite_game_message" translatable="false">Tem certeza de que deseja sair deste jogo?</string>
+    <string name="download_game" translatable="false">Baixar jogo</string>
+    <string name="select_board_size" translatable="false">Escolha o tamanho do tabuleiro de jogo</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="close" translatable="false">saída</string>
+    <string name="confirm" translatable="false">confirme</string>
+    <string name="yes" translatable="false">Sim</string>
+    <string name="no" translatable="false">Não</string>
+    <string name="game_restart_message" translatable="false">Tem certeza de que deseja reiniciar o jogo?</string>
+    <string name="alert_title" translatable="false">Alerta</string>
+    <string name="total_pairs_text" translatable="false">Pares: %d / %d</string>
+    <string name="moves_text" translatable="false">Movimentos: %d</string>
+    <string name="game_won" translatable="false">Parabéns, você ganhou o jogo</string>
+    <string name="game_already_won" translatable="false">Você já ganhou o jogo!</string>
+    <string name="invalid_move" translatable="false">Movimento inválido</string>
+    <string name="refresh" translatable="false">Atualizar</string>
+    <string name="change_board_size_text" translatable="false">Alterar tamanho da placa</string>
+    <string name="create_custom_game" translatable="false">Criar jogo personalizado</string>
+    <string name="create_custom_game_title" translatable="false">Crie um jogo de memória personalizado</string>
+</resources>

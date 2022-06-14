@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Juego de memoria</string>
+    <string name="refresh" translatable="false">Reiniciar</string>
+    <string name="change_board_size_text" translatable="false">Cambiar el tamaño del tablero</string>
+    <string name="create_custom_game" translatable="false">Crear juego personalizado</string>
+    <string name="create_custom_game_title" translatable="false">Crear juego de memoria personalizado</string>
+    <string name="download_custom_game" translatable="false">Descargar juego personalizado</string>
+    <string name="invalid_move" translatable="false">Movimiento inválido</string>
+    <string name="game_already_won" translatable="false">¡Ya ganaste el juego!</string>
+    <string name="game_won" translatable="false">Felicidades, ganaste el juego.</string>
+    <string name="total_pairs_text" translatable="false">Parejas: %d / %d</string>
+    <string name="moves_text" translatable="false">Movimientos: %d</string>
+    <string name="alert_title" translatable="false">Alerta</string>
+    <string name="game_restart_message" translatable="false">Are you sure you want to restart the game?</string>
+    <string name="no" translatable="false">No</string>
+    <string name="yes" translatable="false">Sí</string>
+    <string name="confirm" translatable="false">Confirmar</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="close" translatable="false">Cerca</string>
+    <string name="select_board_size" translatable="false">Elija el tamaño del tablero</string>
+    <string name="download_game" translatable="false">Descárgate el juego</string>
+    <string name="quite_game_message" translatable="false">¿Estás segura de que quieres salir de este juego?</string>
+    <string name="game_won_message" translatable="false">Felicidades, ganaste el juego.</string>
+    <string name="save" translatable="false">Guardar partida</string>
+    <string name="custom_game_name_hint" translatable="false">Nombre del juego (ejemplo: \'coches\')</string>
+    <string name="uploaded_message_info" translatable="false">¡Subido con éxito! Juguemos a este juego %s</string>
+    <string name="photo_choose_title" translatable="false">Imágenes elegidas (%d / %d)</string>
+    <string name="read_write_permission_error" translatable="false">Debes aceptar el permiso para crear un juego personalizado.</string>
+    <string name="photo_picking_error" translatable="false">No se pueden elegir fotos, algo salió mal</string>
+    <string name="game_creation_error" translatable="false">No se pudo crear el juego</string>
+    <string name="game_load_error" translatable="false">Error al cargar el juego.</string>
+    <string name="game_not_found_error" translatable="false">Lo siento, no pude encontrar este %s juego</string>
+    <string name="view_shrink_error" translatable="false">Actualizar el juego, si las vistas no se representan correctamente</string>
+    <string name="duplicate_text" translatable="false">error duplicado</string>
+    <string name="game_name_conflict" translatable="false">Ya existe un nombre de %s, ingrese otro nombre</string>
+    <string name="server_error" translatable="false">Error del servidor encontrado</string>
+    <string name="image_uploading_error" translatable="false">no se pueden subir imagenes</string>
+    <string name="easy_board_size" translatable="false">Fácil (4x2)</string>
+    <string name="medium_board_size" translatable="false">Medio (6x3)</string>
+    <string name="hard_board_size" translatable="false">Dura (6 x 4)</string>
+    <string name="network_error" translatable="false">Sin conexión a Internet</string>
+    <string name="no_name_error" translatable="false">Introduce el nombre del juego para descargar</string>
+    <string name="developer_name" translatable="false">Creado por Aditya ➡</string>
+</resources>

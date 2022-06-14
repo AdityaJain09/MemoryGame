@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">मेमरी गेम</string>
+    <string name="refresh" translatable="false">रिफ्रेश करा</string>
+    <string name="change_board_size_text" translatable="false">बोर्ड आकार बदला</string>
+    <string name="create_custom_game" translatable="false">सानुकूल गेम तयार करा</string>
+    <string name="create_custom_game_title" translatable="false">सानुकूल मेमरी गेम तयार करा</string>
+    <string name="download_custom_game" translatable="false">सानुकूल गेम डाउनलोड करा</string>
+    <string name="invalid_move" translatable="false">अवैध हलवा</string>
+    <string name="game_already_won" translatable="false">तुम्ही आधीच गेम जिंकलात!</string>
+    <string name="game_won" translatable="false">अभिनंदन, तुम्ही गेम जिंकलात</string>
+    <string name="total_pairs_text" translatable="false">जोड्या: %d / %d</string>
+    <string name="moves_text" translatable="false">चालते: %d</string>
+    <string name="alert_title" translatable="false">अलर्ट</string>
+    <string name="game_restart_message" translatable="false">तुमची खात्री आहे की तुम्ही गेम पुन्हा सुरू करू इच्छिता?</string>
+    <string name="no" translatable="false">नाही</string>
+    <string name="yes" translatable="false">होय</string>
+    <string name="confirm" translatable="false">पुष्टी</string>
+    <string name="close" translatable="false">बंद</string>
+    <string name="ok" translatable="false">ठीक आहे</string>
+    <string name="select_board_size" translatable="false">बोर्ड आकार निवडा</string>
+    <string name="download_game" translatable="false">गेम डाउनलोड करा</string>
+    <string name="quite_game_message" translatable="false">तुमची खात्री आहे की तुम्ही हा गेम सोडू इच्छिता?</string>
+    <string name="game_won_message" translatable="false">अभिनंदन, तुम्ही गेम जिंकलात</string>
+    <string name="custom_game_name_hint" translatable="false">खेळाचे नाव (उदाहरण: \'पांडा_फन\')</string>
+    <string name="uploaded_message_info" translatable="false">यशस्वीरित्या अपलोड केले! चला हा गेम %s खेळूया</string>
+    <string name="photo_choose_title" translatable="false">निवडलेल्या प्रतिमा (%d / %d)</string>
+    <string name="hard_board_size" translatable="false">कठीण (६ x ४)</string>
+    <string name="medium_board_size" translatable="false">मध्यम (६ x ३)</string>
+    <string name="easy_board_size" translatable="false">सोपे (4 x 2)</string>
+    <string name="image_uploading_error" translatable="false">प्रतिमा अपलोड करण्यात अयशस्वी</string>
+    <string name="server_error" translatable="false">सर्व्हर त्रुटी आढळली</string>
+    <string name="game_name_conflict" translatable="false">%s नाव आधीपासून अस्तित्वात आहे, कृपया दुसरे नाव एंटर करा</string>
+    <string name="duplicate_text" translatable="false">डुप्लिकेट एरर</string>
+    <string name="view_shrink_error" translatable="false">दृश्ये योग्यरित्या प्रस्तुत होत नसल्यास गेम रिफ्रेश करा</string>
+    <string name="game_not_found_error" translatable="false">क्षमस्व, हा %s गेम शोधू शकलो नाही</string>
+    <string name="game_load_error" translatable="false">गेम लोड करण्यात अयशस्वी.</string>
+    <string name="game_creation_error" translatable="false">गेम तयार करण्यात अयशस्वी</string>
+    <string name="photo_picking_error" translatable="false">फोटो निवडण्यात अक्षम, काहीतरी चूक झाली</string>
+    <string name="read_write_permission_error" translatable="false">सानुकूल गेम तयार करण्यासाठी तुम्हाला परवानगी घेणे आवश्यक आहे</string>
+    <string name="network_error" translatable="false">तुम्ही इंटरनेटशी कनेक्ट केलेले नाही</string>
+    <string name="no_name_error" translatable="false">डाउनलोड करण्यासाठी गेमचे नाव प्रविष्ट करा</string>
+</resources>

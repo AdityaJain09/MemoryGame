@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">MemoryGame</string>
+    <string name="refresh" translatable="false">Refresh</string>
+    <string name="change_board_size_text" translatable="false">Change Board Size</string>
+    <string name="create_custom_game" translatable="false">Create custom game</string>
+    <string name="create_custom_game_title" translatable="false">Create custom memory game</string>
+    <string name="download_custom_game" translatable="false">Download custom game</string>
+    <string name="invalid_move" translatable="false">Invalid Move</string>
+    <string name="game_already_won" translatable="false">You Already Won the Game !</string>
+    <string name="game_won" translatable="false">Congratulations, You won the game</string>
+    <string name="total_pairs_text" translatable="false">Pairs: %d / %d</string>
+    <string name="moves_text" translatable="false">Moves: %d</string>
+    <string name="alert_title" translatable="false">Alert</string>
+    <string name="game_restart_message" translatable="false">Are you sure you want to restart game ?</string>
+    <string name="no" translatable="false">No</string>
+    <string name="yes" translatable="false">Yes</string>
+    <string name="confirm" translatable="false">Confirm</string>
+    <string name="close" translatable="false">Close</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="select_board_size" translatable="false">Choose Board Size</string>
+    <string name="download_game" translatable="false">Download Game</string>
+    <string name="quite_game_message" translatable="false">Are you sure you want to quit this game ?</string>
+    <string name="game_won_message" translatable="false">Congratulations, You won the game</string>
+
+    // custom game
+    <string name="save" translatable="false">Save</string>
+    <string name="custom_game_name_hint" translatable="false">Game name (example: \'panda_fun\')</string>
+    <string name="uploaded_message_info" translatable="false">Uploaded Successfully !  Let\'s play this game %s</string>
+    <string name="photo_choose_title" translatable="false">Chosen Images (%d / %d)</string>
+    <string name="read_write_permission_error" translatable="false">You need to accept permission, for creating custom game</string>
+
+    // errors
+    <string name="photo_picking_error" translatable="false">Unable to pick photos, something went wrong</string>
+    <string name="game_creation_error" translatable="false">Failed to create game</string>
+    <string name="game_load_error" translatable="false">failed load the game.</string>
+    <string name="game_not_found_error" translatable="false">Sorry, could not find this %s game"</string>
+    <string name="view_shrink_error" translatable="false">Refresh game, if  views does not render properly</string>
+    <string name="duplicate_text" translatable="false">Duplicate Error</string>
+    <string name="game_name_conflict" translatable="false">A %s name already exist, Please enter another name</string>
+    <string name="server_error" translatable="false">Encountered Server Error</string>
+    <string name="image_uploading_error" translatable="false">Failed to upload images</string>
+    <string name="easy_board_size" translatable="false">Easy (4 x 2)</string>
+    <string name="medium_board_size" translatable="false">Medium (6 x 3)</string>
+    <string name="hard_board_size" translatable="false">Hard (6 x 4)</string>
+    <string name="no_name_error" translatable="false">Enter game name to download</string>
+    <string name="network_error" translatable="false">No Internet Connection</string>
+</resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+        app:layout_constraintStart_toStartOf="@id/radioGroupSize"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="8dp"
+        tools:text="@string/change_board_size_text"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupSize"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title">
+
+        <RadioButton
+            android:id="@+id/rbEasy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/easy_board_size" />
+
+        <RadioButton
+            android:id="@+id/rbMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/medium_board_size" />
+
+        <RadioButton
+            android:id="@+id/rbHard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hard_board_size" />
+    </RadioGroup>
+</androidx.constraintlayout.widget.ConstraintLayout>

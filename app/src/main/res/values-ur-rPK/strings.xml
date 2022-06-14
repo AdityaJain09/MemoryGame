@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">میموری گیم</string>
+    <string name="change_board_size_text" translatable="false">بورڈ کا سائز تبدیل کریں۔</string>
+    <string name="create_custom_game" translatable="false">حسب ضرورت گیم بنائیں</string>
+    <string name="create_custom_game_title" translatable="false">حسب ضرورت میموری گیم بنائیں</string>
+    <string name="download_custom_game" translatable="false">حسب ضرورت گیم ڈاؤن لوڈ کریں۔</string>
+    <string name="refresh" translatable="false">ریفریش کریں۔</string>
+    <string name="invalid_move" translatable="false">غلط اقدام</string>
+    <string name="game_already_won" translatable="false">آپ پہلے ہی گیم جیت چکے ہیں!</string>
+    <string name="game_won" translatable="false">مبارک ہو، آپ نے گیم جیت لی</string>
+    <string name="total_pairs_text" translatable="false">جوڑے: %d / %d</string>
+    <string name="moves_text" translatable="false">حرکتیں: %d</string>
+    <string name="alert_title" translatable="false">الرٹ</string>
+    <string name="game_restart_message" translatable="false">کیا آپ واقعی گیم دوبارہ شروع کرنا چاہتے ہیں؟</string>
+    <string name="no" translatable="false">نہیں</string>
+    <string name="yes" translatable="false">جی ہاں</string>
+    <string name="confirm" translatable="false">تصدیق کریں۔</string>
+    <string name="close" translatable="false">بند کریں</string>
+    <string name="ok" translatable="false">ٹھیک ہے</string>
+    <string name="select_board_size" translatable="false">بورڈ کا سائز منتخب کریں۔</string>
+    <string name="download_game" translatable="false">گیم ڈاؤن لوڈ کریں۔</string>
+    <string name="quite_game_message" translatable="false">کیا آپ واقعی اس گیم کو چھوڑنا چاہتے ہیں؟</string>
+    <string name="game_won_message" translatable="false">مبارک ہو، آپ نے گیم جیت لی</string>
+    <string name="save" translatable="false">محفوظ کریں۔</string>
+    <string name="custom_game_name_hint" translatable="false">گیم کا نام (مثال: \'پانڈا_فن\')</string>
+    <string name="uploaded_message_info" translatable="false">کامیابی سے اپ لوڈ ہو گیا! آئیے یہ گیم %s کھیلیں</string>
+    <string name="photo_choose_title" translatable="false">منتخب کردہ تصاویر %d / %d</string>
+    <string name="read_write_permission_error" translatable="false">حسب ضرورت گیم بنانے کے لیے آپ کو اجازت لینے کی ضرورت ہے۔</string>
+    <string name="photo_picking_error" translatable="false">تصاویر لینے سے قاصر، کچھ غلط ہو گیا۔</string>
+    <string name="game_creation_error" translatable="false">گیم بنانے میں ناکام</string>
+    <string name="game_load_error" translatable="false">کھیل کو لوڈ کرنے میں ناکام۔</string>
+    <string name="game_not_found_error" translatable="false">معذرت، یہ %s گیم نہیں مل سکا</string>
+    <string name="view_shrink_error" translatable="false">گیم ریفریش کریں، اگر گیم ٹھیک سے رینڈر نہیں ہوتی ہے۔</string>
+    <string name="duplicate_text" translatable="false">ڈپلیکیٹ خرابی۔</string>
+    <string name="game_name_conflict" translatable="false">گیم کا نام %s پہلے سے موجود ہے، براہ کرم دوسرا نام درج کریں۔</string>
+    <string name="server_error" translatable="false">سرور کی خرابی کا سامنا کرنا پڑا</string>
+    <string name="image_uploading_error" translatable="false">تصاویر اپ لوڈ کرنے میں ناکام</string>
+    <string name="easy_board_size" translatable="false">آسان (4 x 2)</string>
+    <string name="medium_board_size" translatable="false">درمیانہ (6 x 3)</string>
+    <string name="hard_board_size" translatable="false">سخت (6 x 4)</string>
+    <string name="network_error" translatable="false">کوئی انٹرنیٹ کنکشن نہیں ہے۔</string>
+    <string name="no_name_error" translatable="false">ڈاؤن لوڈ کرنے کے لیے گیم کا نام درج کریں۔</string>
+    <string name="developer_name" translatable="false">آدتیہ کے ذریعہ تخلیق کیا گیا ➡</string>
+</resources>

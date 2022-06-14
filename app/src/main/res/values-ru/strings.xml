@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Игра на запоминание</string>
+    <string name="developer_name" translatable="false">Создано Адитьей ➡</string>
+    <string name="no_name_error" translatable="false">Введите название игры для загрузки</string>
+    <string name="network_error" translatable="false">Нет соединения с интернетом</string>
+    <string name="hard_board_size" translatable="false">Жесткий (6 х 4)</string>
+    <string name="medium_board_size" translatable="false">Средний (6 х 3)</string>
+    <string name="easy_board_size" translatable="false">Легкий (4 х 2)</string>
+    <string name="image_uploading_error" translatable="false">Не удалось загрузить изображения</string>
+    <string name="server_error" translatable="false">Обнаружена ошибка сервера</string>
+    <string name="game_name_conflict" translatable="false">Имя %s уже существует. Пожалуйста, введите другое имя</string>
+    <string name="duplicate_text" translatable="false">Ошибка конфликта</string>
+    <string name="view_shrink_error" translatable="false">нажмите кнопку обновления, если представления не отображаются должным образом</string>
+    <string name="game_not_found_error" translatable="false">Извините, не удалось найти эту игру %s</string>
+    <string name="game_load_error" translatable="false">не удалось загрузить игру.</string>
+    <string name="game_creation_error" translatable="false">Не удалось создать игру</string>
+    <string name="photo_picking_error" translatable="false">Не удалось выбрать фотографии, что-то пошло не так</string>
+    <string name="read_write_permission_error" translatable="false">Вам необходимо принять разрешение на создание пользовательской игры</string>
+    <string name="photo_choose_title" translatable="false">Выбранные изображения (%d / %d)</string>
+    <string name="uploaded_message_info" translatable="false">Загружено успешно! Давай поиграем в эту игру %s</string>
+    <string name="custom_game_name_hint" translatable="false">Название игры (пример: \'panda_fun\')</string>
+    <string name="save" translatable="false">Сохранять</string>
+    <string name="game_won_message" translatable="false">Поздравляем, вы выиграли игру</string>
+    <string name="quite_game_message" translatable="false">Вы уверены, что хотите выйти из этой игры?</string>
+    <string name="download_game" translatable="false">Скачать игру</string>
+    <string name="select_board_size" translatable="false">Выберите размер доски</string>
+    <string name="ok" translatable="false">Ok</string>
+    <string name="close" translatable="false">Закрывать</string>
+    <string name="confirm" translatable="false">Подтверждать</string>
+    <string name="yes" translatable="false">Да</string>
+    <string name="no" translatable="false">Не</string>
+    <string name="game_restart_message" translatable="false">Вы уверены, что хотите перезапустить игру?</string>
+    <string name="alert_title" translatable="false">предупреждение</string>
+    <string name="moves_text" translatable="false">Ходов: %d</string>
+    <string name="total_pairs_text" translatable="false">Пары: %d / %d</string>
+    <string name="game_won" translatable="false">Поздравляем, вы выиграли игру</string>
+    <string name="game_already_won" translatable="false">Вы уже выиграли игру!</string>
+    <string name="invalid_move" translatable="false">Неверный ход</string>
+    <string name="download_custom_game" translatable="false">Скачать пользовательскую игру</string>
+    <string name="create_custom_game_title" translatable="false">Создать собственную игру памяти</string>
+    <string name="create_custom_game" translatable="false">Создать собственную игру</string>
+    <string name="change_board_size_text" translatable="false">Изменить размер доски</string>
+    <string name="refresh" translatable="false">Обновить</string>
+</resources>
