@@ -1,9 +1,7 @@
 package com.stark.memorygame.model
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-
 enum class BoardSize(val pairs: Int) {
-    EASY(8), MEDIUM(18), HARD(24);
+    EASY(8), MEDIUM(18), HARD(24), VERY_HARD(28);
 
     companion object {
         fun getBoardSizeValue(size: Int) = values().first { it.pairs == size }
@@ -14,6 +12,7 @@ enum class BoardSize(val pairs: Int) {
             EASY -> 2
             MEDIUM -> 3
             HARD -> 4
+            else -> 4
         }
     }
 

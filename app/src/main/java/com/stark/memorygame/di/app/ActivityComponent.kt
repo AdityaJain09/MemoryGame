@@ -1,9 +1,11 @@
 package com.stark.memorygame.di.app
 
+import android.app.Application
 import com.stark.memorygame.di.module.ViewModelModule
 import com.stark.memorygame.di.scopes.ActivityScope
 import com.stark.memorygame.view.screens.custom_game.CustomGameActivity
 import com.stark.memorygame.view.screens.main.MainActivity
+import dagger.BindsInstance
 import dagger.Subcomponent
 
 @Subcomponent(

@@ -25,6 +25,7 @@ import com.google.firebase.storage.ktx.storage
 import com.stark.memorygame.R
 import com.stark.memorygame.model.BoardSize
 import com.stark.memorygame.databinding.ActivityCustomGameBinding
+import com.stark.memorygame.model.UserCustomGameImages
 import com.stark.memorygame.utils.FirebaseConstants
 import com.stark.memorygame.utils.FirebaseConstants.UPLOAD_CUSTOM_GAME_SUCCESS
 import com.stark.memorygame.utils.ImageScaler
@@ -218,9 +219,15 @@ class CustomGameActivity : BaseActivity() {
         binding.pbUploading.visibility = View.GONE
     }
 
-    private fun manageAllUploadedImages(gameName: String, uploadedImages: MutableList<String>) {
-        db.collection(DATABASE_NAME).document(gameName).set(mapOf(ROOT_COLLECTION_NAME to uploadedImages))
-            .addOnCompleteListener { uploadDocumentTask ->
+    private fun manageAllUploadedImages(
+        gameName: String,
+        uploadedImages: MutableList<String>
+    ) {
+        val customImages = UserCustomGameImages(
+            images = uploadedImages.toList()
+        )
+        db.collection(DATABASE_NAME)
+            .document(gameName).set(customImages).addOnCompleteListener { uploadDocumentTask ->
                 binding.pbUploading.visibility = View.GONE
                 if (!uploadDocumentTask.isSuccessful) {
                     uploadDocumentTask.exception?.let {
@@ -261,6 +268,7 @@ class CustomGameActivity : BaseActivity() {
     private fun initViews() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         boardSize = intent.getSerializableExtra(CUSTOM_GAME_EXTRAS) as BoardSize
+        Log.i(TAG, "initViews boarsSize: $boardSize")
         supportActionBar?.title = getString(R.string.photo_choose_title, 0, boardSize.getTotalPairs())
         customGameAdapter = CustomGameAdapter(
             this,
@@ -282,7 +290,6 @@ class CustomGameActivity : BaseActivity() {
             layoutManager = GridLayoutManager(this@CustomGameActivity, boardSize.getWidth())
             setHasFixedSize(true)
         }
-
     }
 
     private fun requestPermission() {
@@ -304,8 +311,6 @@ class CustomGameActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    val abc = ""
-
     companion object {
         const val CUSTOM_GAME_EXTRAS = "custom_game_board_size_extras"
         private const val TAG = "CustomGameActivity"
@@ -313,6 +318,7 @@ class CustomGameActivity : BaseActivity() {
         private const val MIN_GAME_NAME_LENGTH = 3
         private var MAX_GAME_NAME_LENGTH: Int = 0
         const val GAME_NAME_EXTRA = "custom_game_name"
+        private const val SHARE_DOCUMENT = "is_document_sharable"
         
         fun setMaxGameLength(length: Int?) {
             MAX_GAME_NAME_LENGTH = if (length == null || length < 1) 15 else length

@@ -40,4 +40,5 @@
     <string name="read_write_permission_error" translatable="false">सानुकूल गेम तयार करण्यासाठी तुम्हाला परवानगी घेणे आवश्यक आहे</string>
     <string name="network_error" translatable="false">तुम्ही इंटरनेटशी कनेक्ट केलेले नाही</string>
     <string name="no_name_error" translatable="false">डाउनलोड करण्यासाठी गेमचे नाव प्रविष्ट करा</string>
+    <string name="enter_game_name_hint">Enter game name</string>
 </resources>

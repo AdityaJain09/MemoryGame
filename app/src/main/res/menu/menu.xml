@@ -21,4 +21,5 @@
     <item
         android:id="@+id/mi_about"
         android:title="@string/developer_name" />
+
 </menu>

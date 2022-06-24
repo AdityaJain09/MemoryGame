@@ -41,4 +41,5 @@
     <string name="change_board_size_text" translatable="false">Alterar tamanho da placa</string>
     <string name="create_custom_game" translatable="false">Criar jogo personalizado</string>
     <string name="create_custom_game_title" translatable="false">Crie um jogo de memória personalizado</string>
+    <string name="enter_game_name_hint">Enter game name</string>
 </resources>

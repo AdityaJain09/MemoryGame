@@ -2,6 +2,7 @@ package com.stark.memorygame.view.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stark.memorygame.data.UserDataSource
 import com.stark.memorygame.model.BoardSize
 import com.stark.memorygame.model.MemoryCard
 import com.stark.memorygame.utils.Constants
@@ -10,18 +11,14 @@ import com.stark.memorygame.view.state.GameStatus
 import com.stark.memorygame.view.state.MemoryCardGameState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MemoryGameViewModel @Inject constructor() : ViewModel() {
-
     val userIntent = Channel<MemoryCardGameIntent>(Channel.UNLIMITED)
-
     private val _state: MutableStateFlow<MemoryCardGameState> =
         MutableStateFlow(MemoryCardGameState.Idle)
     val state: StateFlow<MemoryCardGameState> = _state.asStateFlow()

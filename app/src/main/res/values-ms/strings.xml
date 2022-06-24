@@ -41,4 +41,5 @@
     <string name="hard_board_size" translatable="false">Keras (6 x 4)</string>
     <string name="network_error" translatable="false">anda tidak disambungkan ke internet</string>
     <string name="no_name_error" translatable="false">Masukkan nama permainan untuk dimuat turun</string>
+    <string name="enter_game_name_hint">Enter game name</string>
 </resources>

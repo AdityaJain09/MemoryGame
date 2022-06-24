@@ -42,8 +42,17 @@
     <string name="easy_board_size" translatable="false">Easy (4 x 2)</string>
     <string name="medium_board_size" translatable="false">Medium (6 x 3)</string>
     <string name="hard_board_size" translatable="false">Hard (6 x 4)</string>
+    <string name="very_hard_board_size" translatable="false">Very Hard (6 x 5)</string>
     <string name="network_error" translatable="false">No Internet Connection</string>
     <string name="no_name_error" translatable="false">Enter game name to download</string>
     <string name="developer_name" translatable="false">Created by Aditya ➡</string>
+    <string name="enter_game_name_hint">Enter game name</string>
+    <string name="game_share_info" translatable="false">I agree to share my game with all users</string>
+    <string name="download_game_error">Something went wrong, while downloading game</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="username_hint">Enter Username</string>
+    <string name="create_account">Create Memory Game Account</string>
+    <string name="create">Create</string>
 
 </resources>

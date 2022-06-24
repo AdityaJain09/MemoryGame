@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -19,31 +19,24 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.github.jinatonic.confetti.CommonConfetti
 import com.github.jinatonic.confetti.ConfettiManager
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
-import com.stark.memorygame.MemoryGameApplication
 import com.stark.memorygame.R
 import com.stark.memorygame.model.BoardSize
 import com.stark.memorygame.model.BoardSize.Companion.getBoardSizeValue
 import com.stark.memorygame.model.UserCustomGameImages
 import com.stark.memorygame.databinding.ActivityMainBinding
-import com.stark.memorygame.utils.FirebaseConstants
 import com.stark.memorygame.utils.FirebaseConstants.DOWNLOAD_CUSTOM_GAME_ERROR
 import com.stark.memorygame.utils.FirebaseConstants.DOWNLOAD_CUSTOM_GAME_SUCCESS
 import com.stark.memorygame.utils.FirebaseConstants.GAME_NAME
 import com.stark.memorygame.view.adapter.MemoryCardClickListener
 import com.stark.memorygame.view.adapter.MemoryGameAdapter
 import com.stark.memorygame.view.common.DialogHelper
-import com.stark.memorygame.view.common.network_handler.NetworkBroadCastReceiver
 import com.stark.memorygame.view.custom_views.BoardSelectorDialog
 import com.stark.memorygame.view.custom_views.OnBoardSizeSelectListener
 import com.stark.memorygame.view.custom_views.OnDownloadGameListener
 import com.stark.memorygame.view.extensions.createToast
 import com.stark.memorygame.view.extensions.launchWithLifecycle
-import com.stark.memorygame.view.extensions.launchWithRepeatOnLifecycle
 import com.stark.memorygame.view.extensions.showSnackBar
 import com.stark.memorygame.view.intent.MemoryCardGameIntent
 import com.stark.memorygame.view.screens.base.BaseActivity
@@ -54,7 +47,6 @@ import com.stark.memorygame.view.state.GameStatus
 import com.stark.memorygame.view.state.MemoryCardGameState
 import com.stark.memorygame.view.viewmodel.ViewModelFactory
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -96,7 +88,14 @@ class MainActivity : BaseActivity() {
                 createToast(getString(R.string.no_name_error), Toast.LENGTH_SHORT).show()
                 return
             }
-            downloadGame(gameName)
+            try {
+                downloadGame(gameName)
+            } catch (e: Exception) {
+                firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_ERROR) {
+                    param(GAME_NAME, gameName )
+                }
+                createToast(getString(R.string.download_game_error)).show()
+            }
         }
     }
 
@@ -105,6 +104,7 @@ class MainActivity : BaseActivity() {
             override fun onSelect(size: BoardSize) {
                 gameName = null
                 vm.setCustomCards(null)
+                Log.i(TAG, "onSelect: boardsize = $size")
                 if (menuSelectState != MenuSelectState.CUSTOM_NEW_GAME) {
                     vm.setBoardSize(size)
                     return
@@ -132,21 +132,30 @@ class MainActivity : BaseActivity() {
     private var gameName: String ?= null
     private fun downloadGame(customGameName: String) {
         db.collection(DATABASE_NAME).document(customGameName).get().addOnSuccessListener { document ->
-            val customImages = document.toObject(UserCustomGameImages::class.java)
-            Log.i(TAG, "downloadGame: $customImages and ${document.data?.values}")
-            if (customImages?.images == null) {
-                Log.e(TAG, "Failed to fetch $customGameName from firestore")
-                createToast(String.format(getString(R.string.game_not_found_error, customGameName)), Toast.LENGTH_SHORT).show()
-                return@addOnSuccessListener
+            val downloadedCustomImages = document.toObject(UserCustomGameImages::class.java)
+            downloadedCustomImages?.let { customImages ->
+
+                if (customImages.images == null) {
+                    Log.e(TAG, "Failed to fetch $customGameName from firestore")
+                    createToast(
+                        String.format(
+                            getString(
+                                R.string.game_not_found_error,
+                                customGameName
+                            )
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                    return@addOnSuccessListener
+                }
+                val totalCards = customImages.images.size * 2
+                vm.setCustomCards(customImages.images)
+                cacheImages(customImages.images)
+                gameName = customGameName
+                firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_SUCCESS) {
+                    param(GAME_NAME, customGameName)
+                }
+                vm.setBoardSize(getBoardSizeValue(totalCards))
             }
-            val totalCards = customImages.images.size * 2
-            vm.setCustomCards(customImages.images)
-            cacheImages(customImages.images)
-            gameName = customGameName
-            firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_SUCCESS) {
-                param(GAME_NAME, customGameName)
-            }
-            vm.setBoardSize(getBoardSizeValue(totalCards))
         }.addOnFailureListener {
             firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_ERROR) {
                 param(GAME_NAME, customGameName)
@@ -354,5 +363,5 @@ class MainActivity : BaseActivity() {
 }
 
 enum class MenuSelectState {
-    BOARD_SIZE, CUSTOM_NEW_GAME, DOWNLOAD_CUSTOM_GAME
+    BOARD_SIZE, CUSTOM_NEW_GAME, DOWNLOAD_CUSTOM_GAME, CREATE_ACCOUNT
 }

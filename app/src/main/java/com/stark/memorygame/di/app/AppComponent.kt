@@ -1,6 +1,7 @@
 package com.stark.memorygame.di.app
 
 import android.content.Context
+import com.stark.memorygame.di.module.AppModule
 import com.stark.memorygame.di.module.ViewModelFactoryModule
 import dagger.BindsInstance
 import dagger.Component
@@ -8,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = [ViewModelFactoryModule::class]
+    modules = [AppModule::class, ViewModelFactoryModule::class]
 )
 interface AppComponent {
 

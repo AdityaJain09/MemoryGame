@@ -42,4 +42,5 @@
     <string name="network_error" translatable="false">کوئی انٹرنیٹ کنکشن نہیں ہے۔</string>
     <string name="no_name_error" translatable="false">ڈاؤن لوڈ کرنے کے لیے گیم کا نام درج کریں۔</string>
     <string name="developer_name" translatable="false">آدتیہ کے ذریعہ تخلیق کیا گیا ➡</string>
+    <string name="enter_game_name_hint">Enter game name</string>
 </resources>

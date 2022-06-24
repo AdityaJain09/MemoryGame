@@ -29,7 +29,6 @@ class MemoryGameAdapter(
     inner class MemoryViewHolder(private val binding: MemoryCardBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             val card = memoryCards[position]
-            Log.i("checks", "bind: $memoryCards")
             if (card.isFaceUp) {
                 card.imageUrl?.let {
                     Picasso.get().load(it).placeholder(R.drawable.ic_baseline_image_24).into(binding.imageButton)

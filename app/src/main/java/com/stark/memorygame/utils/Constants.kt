@@ -16,6 +16,9 @@ object Constants {
         R.drawable.ic_school,
         R.drawable.ic_send,
         R.drawable.ic_star,
-        R.drawable.ic_work
+        R.drawable.ic_work,
+        R.drawable.ic_truck,
+        R.drawable.ic_pizza,
+        R.drawable.ic_bicycle
     )
 }

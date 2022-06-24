@@ -42,4 +42,5 @@
     <string name="create_custom_game" translatable="false">Создать собственную игру</string>
     <string name="change_board_size_text" translatable="false">Изменить размер доски</string>
     <string name="refresh" translatable="false">Обновить</string>
+    <string name="enter_game_name_hint">Enter game name</string>
 </resources>

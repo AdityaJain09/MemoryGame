@@ -55,7 +55,8 @@ class BoardSelectorDialog(
                 when(currentBoardSize) {
                     BoardSize.EASY -> R.id.rbEasy
                     BoardSize.MEDIUM -> R.id.rbMedium
-                    else -> R.id.rbHard
+                    BoardSize.HARD -> R.id.rbHard
+                    else -> R.id.rbVeryHard
                 })
         } else {
             view = LayoutInflater.from(ctx).inflate(resourceId, null)
@@ -72,7 +73,8 @@ class BoardSelectorDialog(
                     val boardSize: BoardSize = when (radioBtnGroup.checkedRadioButtonId) {
                         R.id.rbEasy -> BoardSize.EASY
                         R.id.rbMedium -> BoardSize.MEDIUM
-                        else -> BoardSize.HARD
+                        R.id.rbHard -> BoardSize.HARD
+                        else -> BoardSize.VERY_HARD
                     }
                     boardSizeSelectListener.onSelect(boardSize)
                 } else {
