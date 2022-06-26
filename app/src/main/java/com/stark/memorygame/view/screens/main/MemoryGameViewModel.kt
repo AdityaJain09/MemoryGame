@@ -17,8 +17,15 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class MemoryGameViewModel @Inject constructor() : ViewModel() {
+class MemoryGameViewModel @Inject constructor(
+    private val userDataSource: UserDataSource
+) : ViewModel() {
+
     val userIntent = Channel<MemoryCardGameIntent>(Channel.UNLIMITED)
+
+    var userName: String? = null
+        private set
+
     private val _state: MutableStateFlow<MemoryCardGameState> =
         MutableStateFlow(MemoryCardGameState.Idle)
     val state: StateFlow<MemoryCardGameState> = _state.asStateFlow()
@@ -42,7 +49,19 @@ class MemoryGameViewModel @Inject constructor() : ViewModel() {
     init {
         viewModelScope.launch {
             initCards()
+            userName = getUser()
             handleIntent()
+        }
+    }
+
+    private suspend fun getUser(): String? {
+        return withContext(Dispatchers.IO) {
+            return@withContext try {
+                userDataSource.getUserName().firstOrNull()
+            } catch (e: Exception) {
+                // TODO: let user know why u failed to fetch username
+                null
+            }
         }
     }
 
@@ -156,4 +175,7 @@ class MemoryGameViewModel @Inject constructor() : ViewModel() {
     }
 
     fun isCardAlreadyFaceUp(position: Int): Boolean = cards[position].isFaceUp
+
+    fun checkIfAccountCreated(): Boolean = userName != null
+
 }

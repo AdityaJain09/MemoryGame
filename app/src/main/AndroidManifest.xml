@@ -32,6 +32,13 @@
 
         <activity android:name=".view.screens.custom_game.CustomGameActivity"
             android:screenOrientation="portrait"/>
+
+        <activity android:name=".view.screens.registration.RegistrationActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.MemoryGame.NoActionBar"
+            android:screenOrientation="portrait"/>
+
+        <!--            android:theme="@style/Theme.MemoryGame.NoActionBar"-->
     </application>
 
 </manifest>

@@ -48,11 +48,17 @@
     <string name="developer_name" translatable="false">Created by Aditya ➡</string>
     <string name="enter_game_name_hint">Enter game name</string>
     <string name="game_share_info" translatable="false">I agree to share my game with all users</string>
-    <string name="download_game_error">Something went wrong, while downloading game</string>
+    <string name="download_game_error" translatable="false">Something went wrong, while downloading game</string>
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="username_hint">Enter Username</string>
-    <string name="create_account">Create Memory Game Account</string>
-    <string name="create">Create</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="username_hint" translatable="false">Enter Username</string>
+    <string name="create_account" translatable="false">Create Account</string>
+    <string name="create" translatable="false">Create</string>
+    <string name="username_error">username must be more than 3 characters</string>
+    <string name="username_conflict">Username already taken</string>
+    <string name="user_created_message">Your account has been successfully created</string>
+    <string name="sub_head">By creating account, you can download or share custom game images</string>
+    <string name="user_account_failure_message">Failed to create account</string>
+    <string name="cancel_registration_process">Do you want cancel creating account ?</string>
 
 </resources>

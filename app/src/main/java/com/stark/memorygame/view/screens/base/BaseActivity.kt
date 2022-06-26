@@ -46,7 +46,6 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         remoteConfig.setDefaultsAsync(
             mapOf(
                 "about_link" to "https://www.instagram.com/shahaditya62/",

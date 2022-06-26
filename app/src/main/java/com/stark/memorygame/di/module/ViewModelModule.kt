@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.stark.memorygame.di.ViewModelKey
 import com.stark.memorygame.view.screens.custom_game.CustomGameViewModel
 import com.stark.memorygame.view.screens.main.MemoryGameViewModel
+import com.stark.memorygame.view.screens.registration.RegistrationViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -14,11 +15,16 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(MemoryGameViewModel::class)
-    abstract fun bindMemoryGameViewModel(memoryGameViewModel: MemoryGameViewModel): ViewModel
+    abstract fun bindMemoryGameViewModel(viewModel: MemoryGameViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(CustomGameViewModel::class)
-    abstract fun bindCustomGameViewModel(customGameViewModel: CustomGameViewModel): ViewModel
+    abstract fun bindCustomGameViewModel(viewModel: CustomGameViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RegistrationViewModel::class)
+    abstract fun bindRegistrationViewModel(viewModel: RegistrationViewModel): ViewModel
 
 }

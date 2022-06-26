@@ -5,10 +5,12 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.Layout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -43,6 +45,7 @@ import com.stark.memorygame.view.screens.base.BaseActivity
 import com.stark.memorygame.view.screens.custom_game.CustomGameActivity
 import com.stark.memorygame.view.screens.custom_game.CustomGameActivity.Companion.CUSTOM_GAME_EXTRAS
 import com.stark.memorygame.view.screens.custom_game.CustomGameActivity.Companion.GAME_NAME_EXTRA
+import com.stark.memorygame.view.screens.registration.RegistrationActivity
 import com.stark.memorygame.view.state.GameStatus
 import com.stark.memorygame.view.state.MemoryCardGameState
 import com.stark.memorygame.view.viewmodel.ViewModelFactory
@@ -65,7 +68,8 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    private val customGameContract  = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private val customGameContract =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
                 val gameName = result.data?.getStringExtra(GAME_NAME_EXTRA)
                 if (gameName == null) {
@@ -75,7 +79,6 @@ class MainActivity : BaseActivity() {
                 downloadGame(gameName)
             }
         }
-
 
 
     private val downloadGameListener = object : OnDownloadGameListener {
@@ -92,7 +95,7 @@ class MainActivity : BaseActivity() {
                 downloadGame(gameName)
             } catch (e: Exception) {
                 firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_ERROR) {
-                    param(GAME_NAME, gameName )
+                    param(GAME_NAME, gameName)
                 }
                 createToast(getString(R.string.download_game_error)).show()
             }
@@ -129,38 +132,39 @@ class MainActivity : BaseActivity() {
 
     }
 
-    private var gameName: String ?= null
+    private var gameName: String? = null
     private fun downloadGame(customGameName: String) {
-        db.collection(DATABASE_NAME).document(customGameName).get().addOnSuccessListener { document ->
-            val downloadedCustomImages = document.toObject(UserCustomGameImages::class.java)
-            downloadedCustomImages?.let { customImages ->
+        db.collection(DATABASE_NAME).document(customGameName).get()
+            .addOnSuccessListener { document ->
+                val downloadedCustomImages = document.toObject(UserCustomGameImages::class.java)
+                downloadedCustomImages?.let { customImages ->
 
-                if (customImages.images == null) {
-                    Log.e(TAG, "Failed to fetch $customGameName from firestore")
-                    createToast(
-                        String.format(
-                            getString(
-                                R.string.game_not_found_error,
-                                customGameName
-                            )
-                        ), Toast.LENGTH_SHORT
-                    ).show()
-                    return@addOnSuccessListener
+                    if (customImages.images == null) {
+                        Log.e(TAG, "Failed to fetch $customGameName from firestore")
+                        createToast(
+                            String.format(
+                                getString(
+                                    R.string.game_not_found_error,
+                                    customGameName
+                                )
+                            ), Toast.LENGTH_SHORT
+                        ).show()
+                        return@addOnSuccessListener
+                    }
+                    val totalCards = customImages.images.size * 2
+                    vm.setCustomCards(customImages.images)
+                    cacheImages(customImages.images)
+                    gameName = customGameName
+                    firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_SUCCESS) {
+                        param(GAME_NAME, customGameName)
+                    }
+                    vm.setBoardSize(getBoardSizeValue(totalCards))
                 }
-                val totalCards = customImages.images.size * 2
-                vm.setCustomCards(customImages.images)
-                cacheImages(customImages.images)
-                gameName = customGameName
-                firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_SUCCESS) {
-                    param(GAME_NAME, customGameName)
-                }
-                vm.setBoardSize(getBoardSizeValue(totalCards))
-            }
-        }.addOnFailureListener {
+            }.addOnFailureListener {
             firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_ERROR) {
                 param(GAME_NAME, customGameName)
             }
-            Log.e(TAG, "downloadGame failed ", it )
+            Log.e(TAG, "downloadGame failed ", it)
         }
     }
 
@@ -168,7 +172,8 @@ class MainActivity : BaseActivity() {
         for (image in images) {
             Picasso.get().load(image).fetch()
         }
-        binding.root.showSnackBar(getString(R.string.view_shrink_error), Snackbar.LENGTH_LONG).show()
+        binding.root.showSnackBar(getString(R.string.view_shrink_error), Snackbar.LENGTH_LONG)
+            .show()
     }
 
     private fun updateGamePairs(pairs: Int = 0) {
@@ -184,7 +189,8 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initViews() {
-        supportActionBar?.title = (gameName ?: getString(R.string.app_name)).replaceFirstChar { it.uppercaseChar() }
+        supportActionBar?.title =
+            (gameName ?: getString(R.string.app_name)).replaceFirstChar { it.uppercaseChar() }
         gameAdapter = MemoryGameAdapter(this@MainActivity,
             vm.boardSize,
             vm.cards,
@@ -220,7 +226,7 @@ class MainActivity : BaseActivity() {
         when (item.itemId) {
             R.id.mi_refresh -> {
 
-                if(::confettiManager.isInitialized) confettiManager.terminate()
+                if (::confettiManager.isInitialized) confettiManager.terminate()
                 if (vm.canPlay())
                     alertDialog()
                 else
@@ -231,37 +237,42 @@ class MainActivity : BaseActivity() {
                 menuSelectState = MenuSelectState.BOARD_SIZE
                 boardSelectorDialog = BoardSelectorDialog(
                     this,
-                    boardSizeSelectListener,
-                    onDownloadGameListener = null,
-                    vm.boardSize,
-                    getString(R.string.change_board_size_text),
-                    R.layout.dialog_board_size
+                    onBoardSizeSelectListener = boardSizeSelectListener,
+                    currentBoardSize = vm.boardSize,
+                    title = getString(R.string.change_board_size_text),
+                    resourceId = R.layout.dialog_board_size
                 )
                 return true
             }
 
             R.id.mi_custom -> {
+                if (!vm.checkIfAccountCreated()) {
+                    registerAccount()
+                    return false
+                }
                 boardSelectorDialog = BoardSelectorDialog(
                     this,
-                    boardSizeSelectListener,
-                    onDownloadGameListener = null,
-                    vm.boardSize,
-                    getString(R.string.create_custom_game_title),
-                    R.layout.dialog_board_size
+                    onBoardSizeSelectListener = boardSizeSelectListener,
+                    currentBoardSize = vm.boardSize,
+                    title = getString(R.string.create_custom_game_title),
+                    resourceId = R.layout.dialog_board_size
                 )
                 menuSelectState = MenuSelectState.CUSTOM_NEW_GAME
+
                 return true
             }
 
             R.id.mi_download -> {
+                if (!vm.checkIfAccountCreated()) {
+                    registerAccount()
+                    return false
+                }
                 menuSelectState = MenuSelectState.DOWNLOAD_CUSTOM_GAME
                 boardSelectorDialog = BoardSelectorDialog(
                     this,
-                    onBoardSizeSelectListener = null,
-                    downloadGameListener,
-                    null,
-                    getString(R.string.download_game),
-                    R.layout.dialog_download_board
+                    onDownloadGameListener = downloadGameListener,
+                    title = getString(R.string.download_game),
+                    resourceId = R.layout.dialog_download_board
                 )
                 return true
             }
@@ -277,6 +288,13 @@ class MainActivity : BaseActivity() {
             }
         }
         return true
+    }
+
+    private fun registerAccount() {
+        startActivity(
+            Intent(this, RegistrationActivity::class.java)
+        )
+        finish()
     }
 
     private fun refresh() {
@@ -310,7 +328,10 @@ class MainActivity : BaseActivity() {
                         is MemoryCardGameState.CardStateChange -> {
                             gameAdapter.notifyDataSetChanged()
                             if (vm.isGameWon()) {
-                                confettiManager = CommonConfetti.rainingConfetti(binding.clRoot, intArrayOf(Color.YELLOW, Color.BLUE, Color.MAGENTA)).oneShot()
+                                confettiManager = CommonConfetti.rainingConfetti(
+                                    binding.clRoot,
+                                    intArrayOf(Color.YELLOW, Color.BLUE, Color.MAGENTA)
+                                ).oneShot()
                                 binding.root.showSnackBar(getString(R.string.game_won_message))
                                     .show()
                             }

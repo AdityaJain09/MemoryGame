@@ -23,9 +23,9 @@ interface OnDownloadGameListener {
 
 class BoardSelectorDialog(
     private val ctx: Context,
-    onBoardSizeSelectListener: OnBoardSizeSelectListener?,
-    onDownloadGameListener: OnDownloadGameListener?,
-    private val currentBoardSize: BoardSize?,
+    onBoardSizeSelectListener: OnBoardSizeSelectListener? = null,
+    onDownloadGameListener: OnDownloadGameListener? = null,
+    private val currentBoardSize: BoardSize? = null,
     private val title: String,
     @LayoutRes private val resourceId: Int
 ) {
