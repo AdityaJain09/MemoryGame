@@ -5,13 +5,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.text.Layout
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -22,6 +18,7 @@ import com.github.jinatonic.confetti.CommonConfetti
 import com.github.jinatonic.confetti.ConfettiManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.firestore.CollectionReference
 import com.squareup.picasso.Picasso
 import com.stark.memorygame.R
 import com.stark.memorygame.model.BoardSize
@@ -45,21 +42,23 @@ import com.stark.memorygame.view.screens.base.BaseActivity
 import com.stark.memorygame.view.screens.custom_game.CustomGameActivity
 import com.stark.memorygame.view.screens.custom_game.CustomGameActivity.Companion.CUSTOM_GAME_EXTRAS
 import com.stark.memorygame.view.screens.custom_game.CustomGameActivity.Companion.GAME_NAME_EXTRA
+import com.stark.memorygame.view.screens.custom_game.GameSharingState
 import com.stark.memorygame.view.screens.registration.RegistrationActivity
 import com.stark.memorygame.view.state.GameStatus
 import com.stark.memorygame.view.state.MemoryCardGameState
 import com.stark.memorygame.view.viewmodel.ViewModelFactory
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var gameAdapter: MemoryGameAdapter
-    private lateinit var vm: MemoryGameViewModel
+    private lateinit var vm: MainViewModel
     private var boardSelectorDialog: BoardSelectorDialog? = null
     private var menuSelectState: MenuSelectState = MenuSelectState.BOARD_SIZE
     private lateinit var confettiManager: ConfettiManager
+    private val job: Job = SupervisorJob()
 
     companion object {
         private const val TAG = "MainActivity"
@@ -92,7 +91,7 @@ class MainActivity : BaseActivity() {
                 return
             }
             try {
-                downloadGame(gameName)
+                downloadGame(gameName.lowercase())
             } catch (e: Exception) {
                 firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_ERROR) {
                     param(GAME_NAME, gameName)
@@ -124,48 +123,76 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        vm = ViewModelProvider(this, viewModelFactory)[MemoryGameViewModel::class.java]
+        vm = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         initViews()
         updateGamePairs()
         updatedGameMoves()
         observers()
+    }
 
+    private fun downloadGameNames() {
+        vm.userName?.let { userName ->
+            val collection = db.collection(IMAGES_COLLECTION)
+            downloadMyGamesOnly(collection, userName)
+            collection.whereEqualTo("shareType", GameSharingState.EVERYONE.name).get()
+                .addOnSuccessListener { doc ->
+                    doc.forEachIndexed { index, doc ->
+                        Log.i(TAG, "downloadGameNames: everyone = $doc.id")
+                        vm.addGameNames(doc.id)
+                    }
+                }.addOnFailureListener {
+                    Log.e(TAG, "Failed to download game list of share type everyone due to ", it )
+                }
+
+            collection.whereArrayContains("taggedUsers", userName)
+                .get().addOnSuccessListener { doc ->
+                    doc.forEachIndexed { _, doc ->
+                        Log.i(TAG, "downloadGameNames: tagged users = $doc.id")
+                        vm.addGameNames(doc.id)
+                    }
+
+                }.addOnFailureListener {
+                    Log.e(TAG, "Failed to download game list of tagged users due to ", it )
+                }
+
+        }
     }
 
     private var gameName: String? = null
     private fun downloadGame(customGameName: String) {
-        db.collection(DATABASE_NAME).document(customGameName).get()
+        downloadGameNames()
+        db.collection(IMAGES_COLLECTION).document(customGameName).get()
             .addOnSuccessListener { document ->
                 val downloadedCustomImages = document.toObject(UserCustomGameImages::class.java)
-                downloadedCustomImages?.let { customImages ->
-
-                    if (customImages.images == null) {
-                        Log.e(TAG, "Failed to fetch $customGameName from firestore")
-                        createToast(
-                            String.format(
-                                getString(
-                                    R.string.game_not_found_error,
-                                    customGameName
-                                )
-                            ), Toast.LENGTH_SHORT
-                        ).show()
-                        return@addOnSuccessListener
-                    }
-                    val totalCards = customImages.images.size * 2
-                    vm.setCustomCards(customImages.images)
-                    cacheImages(customImages.images)
-                    gameName = customGameName
-                    firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_SUCCESS) {
-                        param(GAME_NAME, customGameName)
-                    }
-                    vm.setBoardSize(getBoardSizeValue(totalCards))
+                val images = downloadedCustomImages?.images
+                Log.i(TAG, "downloadGame: $downloadedCustomImages")
+                if (images == null) {
+                    Log.e(TAG, "Failed to fetch $customGameName from firestore")
+                    createToast(
+                        String.format(
+                            getString(
+                                R.string.game_not_found_error,
+                                customGameName
+                            )
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                    return@addOnSuccessListener
                 }
+                val totalCards = images.size * 2
+                vm.setCustomCards(images)
+                cacheImages(images)
+                gameName = customGameName
+                firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_SUCCESS) {
+                    param(GAME_NAME, customGameName)
+                }
+                vm.setBoardSize(getBoardSizeValue(totalCards))
             }.addOnFailureListener {
-            firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_ERROR) {
-                param(GAME_NAME, customGameName)
+                Log.i(TAG, "downloadGame: failure")
+                firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_ERROR) {
+                    param(GAME_NAME, customGameName)
+                }
+                Log.e(TAG, "downloadGame failed ", it)
             }
-            Log.e(TAG, "downloadGame failed ", it)
-        }
     }
 
     private fun cacheImages(images: List<String>) {
@@ -225,7 +252,6 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.mi_refresh -> {
-
                 if (::confettiManager.isInitialized) confettiManager.terminate()
                 if (vm.canPlay())
                     alertDialog()
@@ -261,32 +287,34 @@ class MainActivity : BaseActivity() {
 
                 return true
             }
-
-            R.id.mi_download -> {
-                if (!vm.checkIfAccountCreated()) {
-                    registerAccount()
-                    return false
-                }
-                menuSelectState = MenuSelectState.DOWNLOAD_CUSTOM_GAME
-                boardSelectorDialog = BoardSelectorDialog(
-                    this,
-                    onDownloadGameListener = downloadGameListener,
-                    title = getString(R.string.download_game),
-                    resourceId = R.layout.dialog_download_board
-                )
-                return true
-            }
-
+            R.id.mi_download -> initDownload(vm.gameNames.toList())
+            R.id.mi_list -> initDownload(vm.myGames.toList(), false)
             R.id.mi_about -> {
                 firebaseAnalytics.logEvent("open_about", null)
                 val aboutLink = remoteConfig.getString("about_link")
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(aboutLink)))
             }
 
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
+            else -> super.onOptionsItemSelected(item)
+
         }
+        return true
+    }
+
+    private fun initDownload(gameList: List<String>, isDownloadable: Boolean = true): Boolean {
+        if (!vm.checkIfAccountCreated()) {
+            registerAccount()
+            return false
+        }
+        menuSelectState = MenuSelectState.DOWNLOAD_CUSTOM_GAME
+        boardSelectorDialog = BoardSelectorDialog(
+            this,
+            onDownloadGameListener = downloadGameListener,
+            title = getString(R.string.download_game),
+            isGameDownloadable = isDownloadable,
+            resourceId = R.layout.dialog_download_board,
+            downloadGameList = gameList
+        )
         return true
     }
 
@@ -323,7 +351,8 @@ class MainActivity : BaseActivity() {
             launch {
                 vm.state.collect {
                     when (it) {
-                        is MemoryCardGameState.Idle -> {}
+                        is MemoryCardGameState.Idle -> {
+                        }
                         is MemoryCardGameState.Loading -> {}
                         is MemoryCardGameState.CardStateChange -> {
                             gameAdapter.notifyDataSetChanged()
@@ -335,6 +364,10 @@ class MainActivity : BaseActivity() {
                                 binding.root.showSnackBar(getString(R.string.game_won_message))
                                     .show()
                             }
+                        }
+
+                        is MemoryCardGameState.OnDownloadGameNames -> {
+                            downloadGameNames()
                         }
 
                         is MemoryCardGameState.OnGameReset -> {
@@ -365,8 +398,23 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    private fun downloadMyGamesOnly(collection: CollectionReference, userName: String) {
+        collection.whereEqualTo("creator", userName)
+            .get()
+            .addOnSuccessListener {
+                it.documents.forEachIndexed { _, doc ->
+                    Log.i(TAG, "downloadGameNames: creator = $doc.id")
+                    vm.addGameNames(doc.id)
+                    vm.mygames(doc.id)
+                }
+            }.addOnFailureListener {
+                Log.e(TAG, "Failed to download game list of creators due to ", it )
+            }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        job.cancel()
         boardSelectorDialog = null
     }
 

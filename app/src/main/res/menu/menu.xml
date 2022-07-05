@@ -7,6 +7,13 @@
         android:icon="@drawable/ic_refresh"
         android:title="@string/refresh"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/mi_list"
+        android:icon="@drawable/ic_baseline_list_24"
+        android:title="@string/mylist"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/mi_new_size"
         android:title="@string/change_board_size_text"

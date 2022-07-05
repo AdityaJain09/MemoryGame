@@ -12,7 +12,9 @@ import android.text.InputFilter
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doAfterTextChanged
@@ -38,6 +40,7 @@ import com.stark.memorygame.view.state.CustomGameState
 import com.stark.memorygame.view.viewmodel.ViewModelFactory
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.util.*
 import javax.inject.Inject
 
 class CustomGameActivity : BaseActivity() {
@@ -47,13 +50,26 @@ class CustomGameActivity : BaseActivity() {
     private lateinit var customGameAdapter: CustomGameAdapter
     private val images: MutableList<Uri> by lazy { mutableListOf() }
     private lateinit var vm: CustomGameViewModel
+    private var users: Set<String>? = null
+    private lateinit var addUserDialog: AddUserDialog
+    private var shareCategory = GameSharingState.ONLY_ME.option
     private val storage = Firebase.storage
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
+    private val onSearchingUserListener = object : OnSearchingUserListener {
+        override fun onSearch(username: String) {
+            if (!isNetworkAvailable) {
+                createToast(getString(R.string.network_error)).show()
+                return
+            }
+            return searchUser(username)
+        }
+    }
+
     @SuppressLint("NotifyDataSetChanged")
-    private val startImageChooseIntent =
+    private val startImageChooseIntent: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result == null || result.resultCode != RESULT_OK || result.data == null) {
                 createToast(getString(R.string.photo_picking_error), Toast.LENGTH_SHORT).show()
@@ -104,6 +120,41 @@ class CustomGameActivity : BaseActivity() {
         initViews()
         clickListener()
         observers()
+
+        val sharingOptions = resources.getStringArray(R.array.share_with)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, sharingOptions)
+        binding.autoCompleteTextView.setAdapter(adapter)
+
+        
+        binding.autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
+            shareCategory = GameSharingState.values().first { it.option == position }.option
+            if (shareCategory == GameSharingState.SELECTED_USERS.option) {
+                openUserSelectionDialog()
+            }
+        }
+    }
+
+    private fun openUserSelectionDialog() {
+        if (!::addUserDialog.isInitialized) {
+            addUserDialog = AddUserDialog(
+                this,
+                R.style.fullscreen_theme,
+                users,
+                onSearchingUserListener
+            ) { users ->
+                this.users = users
+            }
+        }
+        addUserDialog.show(supportFragmentManager, "add_user_dialog")
+    }
+
+    private fun searchUser(username: String) {
+        db.collection(USER_COLLECTION).document(username).get().addOnSuccessListener { account ->
+            val isUserFound = account != null && account.data != null
+            addUserDialog?.onSearchCompleted(if (isUserFound) username else null)
+        }.addOnFailureListener {
+            createToast(getString(R.string.server_error)).show()
+        }
     }
 
     private fun observers() {
@@ -135,10 +186,10 @@ class CustomGameActivity : BaseActivity() {
                 createToast(getString(R.string.network_error)).show()
                 return@setOnClickListener
             }
-            val gameName = binding.etGameName.text.toString()
+            val gameName = binding.etGameName.text.toString().lowercase(Locale.getDefault())
             // check if game name already taken
             binding.btnSave.isEnabled = false
-            db.collection(DATABASE_NAME).document(gameName).get().addOnSuccessListener { doc ->
+            db.collection(IMAGES_COLLECTION).document(gameName).get().addOnSuccessListener { doc ->
                 if (doc != null && doc.data != null) {
                     AlertDialog.Builder(this)
                         .setTitle(getString(R.string.duplicate_text))
@@ -224,9 +275,12 @@ class CustomGameActivity : BaseActivity() {
         uploadedImages: MutableList<String>
     ) {
         val customImages = UserCustomGameImages(
-            images = uploadedImages.toList()
+            images = uploadedImages.toList(),
+            creator = vm.creator,
+            taggedUsers = users?.toList(),
+            shareType = getShareType(shareCategory)
         )
-        db.collection(DATABASE_NAME)
+        db.collection(IMAGES_COLLECTION)
             .document(gameName).set(customImages).addOnCompleteListener { uploadDocumentTask ->
                 binding.pbUploading.visibility = View.GONE
                 if (!uploadDocumentTask.isSuccessful) {
@@ -252,6 +306,10 @@ class CustomGameActivity : BaseActivity() {
             }
     }
 
+    private fun getShareType(shareCategory: Int): String {
+        return GameSharingState.values().first { it.option == shareCategory }.name
+    }
+
     private fun decodeImageToByteArray(photoUri: Uri): ByteArray {
         val originalBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val source = ImageDecoder.createSource(contentResolver, photoUri)
@@ -268,7 +326,6 @@ class CustomGameActivity : BaseActivity() {
     private fun initViews() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         boardSize = intent.getSerializableExtra(CUSTOM_GAME_EXTRAS) as BoardSize
-        Log.i(TAG, "initViews boarsSize: $boardSize")
         supportActionBar?.title = getString(R.string.photo_choose_title, 0, boardSize.getTotalPairs())
         customGameAdapter = CustomGameAdapter(
             this,
@@ -318,8 +375,7 @@ class CustomGameActivity : BaseActivity() {
         private const val MIN_GAME_NAME_LENGTH = 3
         private var MAX_GAME_NAME_LENGTH: Int = 0
         const val GAME_NAME_EXTRA = "custom_game_name"
-        private const val SHARE_DOCUMENT = "is_document_sharable"
-        
+
         fun setMaxGameLength(length: Int?) {
             MAX_GAME_NAME_LENGTH = if (length == null || length < 1) 15 else length
         }

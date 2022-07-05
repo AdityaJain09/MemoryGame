@@ -4,12 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/drawable/app_icon_background.xml" value="0.1755" />
+        <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/drawable/ic_arrow_back_padded.xml" value="0.1835" />
+        <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.1805" />
+        <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/drawable/ic_baseline_list_24.xml" value="0.1835" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/drawable/ic_refresh.xml" value="0.131" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/activity_create.xml" value="0.23229166666666667" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/activity_create_account.xml" value="0.23229166666666667" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/activity_custom_game.xml" value="0.23229166666666667" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/activity_main.xml" value="0.23229166666666667" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/card_image.xml" value="0.23229166666666667" />
+        <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/dialog.xml" value="0.23125" />
+        <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/dialog_add_user.xml" value="0.23125" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/dialog_board_size.xml" value="0.23229166666666667" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/dialog_create_account.xml" value="0.23229166666666667" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/dialog_download_board.xml" value="0.23229166666666667" />
@@ -17,7 +22,9 @@
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/fragment_dialog_create_username.xml" value="0.23229166666666667" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/game_download_item.xml" value="0.23125" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/game_download_list.xml" value="0.23125" />
+        <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/item_download_list.xml" value="0.22760416666666666" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/memory_card.xml" value="0.23229166666666667" />
+        <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/layout/user_game_list.xml" value="0.23125" />
         <entry key="..\:/android_example_project/MemoryGame/app/src/main/res/menu/menu.xml" value="0.23229166666666667" />
       </map>
     </option>

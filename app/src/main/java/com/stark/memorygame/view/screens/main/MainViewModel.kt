@@ -1,5 +1,6 @@
 package com.stark.memorygame.view.screens.main
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stark.memorygame.data.UserDataSource
@@ -17,7 +18,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class MemoryGameViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
     private val userDataSource: UserDataSource
 ) : ViewModel() {
 
@@ -25,6 +26,17 @@ class MemoryGameViewModel @Inject constructor(
 
     var userName: String? = null
         private set
+
+    @Volatile
+    var gameNames: MutableSet<String> = mutableSetOf()
+        private set
+
+    var myGames: MutableList<String> = mutableListOf()
+        private set
+
+    fun mygames(id: String) {
+        myGames.add(id)
+    }
 
     private val _state: MutableStateFlow<MemoryCardGameState> =
         MutableStateFlow(MemoryCardGameState.Idle)
@@ -50,8 +62,13 @@ class MemoryGameViewModel @Inject constructor(
         viewModelScope.launch {
             initCards()
             userName = getUser()
+            _state.emit(MemoryCardGameState.OnDownloadGameNames)
             handleIntent()
         }
+    }
+
+    fun addGameNames(name: String) {
+        gameNames.add(name)
     }
 
     private suspend fun getUser(): String? {

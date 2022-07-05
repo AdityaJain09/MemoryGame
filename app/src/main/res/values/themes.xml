@@ -19,4 +19,5 @@
         <item name="colorPrimaryVariant">@color/pumpkin</item>
         <item name="colorOnPrimary">@color/white</item>
     </style>
+
 </resources>

@@ -54,11 +54,28 @@
     <string name="username_hint" translatable="false">Enter Username</string>
     <string name="create_account" translatable="false">Create Account</string>
     <string name="create" translatable="false">Create</string>
-    <string name="username_error">username must be more than 3 characters</string>
-    <string name="username_conflict">Username already taken</string>
-    <string name="user_created_message">Your account has been successfully created</string>
-    <string name="sub_head">By creating account, you can download or share custom game images</string>
-    <string name="user_account_failure_message">Failed to create account</string>
-    <string name="cancel_registration_process">Do you want cancel creating account ?</string>
+    <string name="username_validation_error" translatable="false">username must be more than 3 characters</string>
+    <string name="username_conflict" translatable="false">Username already taken</string>
+    <string name="user_created_message" translatable="false">Your account has been successfully created</string>
+    <string name="sub_head" translatable="false">By creating account, you can download or share custom game images</string>
+    <string name="user_account_failure_message" translatable="false">Failed to create account</string>
+    <string name="cancel_registration_process" translatable="false">Do you want cancel creating account ?</string>
+    <string name="share_with_text" translatable="false">Share game with</string>
+    <string name="continue_txt" translatable="false">Continue</string>
+    <string name="back_icon" translatable="false">back button</string>
+    <string name="search_user" translatable="false">Search User</string>
+    <string name="search" translatable="false">Search</string>
+    <string name="enter_user_name_error" translatable="false">username cannot be empty</string>
+    <string name="username_not_found_error" translatable="false">Username not found</string>
+    <string name="username_already_added_error" translatable="false">Username Already Added</string>
+    <string name="download_info_text" translatable="false"><font color="red"></font>click the game name to download</string>
+    <string name="mylist">My Games</string>
+    <string name="game_list_empty_text">Game list is empty! Create Game</string>
+
+    <string-array name="share_with">
+        <item>Only Me</item>
+        <item>Friends and Family</item>
+        <item>EveryOne</item>
+    </string-array>
 
 </resources>

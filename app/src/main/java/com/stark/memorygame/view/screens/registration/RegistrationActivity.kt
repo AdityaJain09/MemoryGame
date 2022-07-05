@@ -66,7 +66,7 @@ class RegistrationActivity : BaseActivity() {
                 is UserRegistrationState.Idle -> {}
 
                 is UserRegistrationState.OnRegistrationValidationFailure -> {
-                    userNameEt.error = getString(R.string.username_error)
+                    userNameEt.error = getString(R.string.username_validation_error)
                     createBtn.isEnabled = true
                 }
 

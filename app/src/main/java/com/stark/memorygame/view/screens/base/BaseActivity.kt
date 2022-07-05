@@ -40,8 +40,9 @@ open class BaseActivity : AppCompatActivity() {
 
     protected companion object {
         private const val TAG = "BaseActivity"
-        const val DATABASE_NAME = "memory"
+        const val IMAGES_COLLECTION = "memory"
         const val ROOT_COLLECTION_NAME = "images"
+        const val USER_COLLECTION = "users"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,8 +92,8 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         unregisterReceiver(networkBroadCastReceiver)
+        super.onDestroy()
     }
 
 }
