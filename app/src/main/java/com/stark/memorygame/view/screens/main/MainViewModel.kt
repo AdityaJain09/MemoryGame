@@ -223,6 +223,9 @@ class MainViewModel @Inject constructor(
                 isAllPairsMatched()
             }
             GameType.TimeLimit -> {
+                if (!isTimeLeft) {
+                    return true
+                }
                 if (isAllPairsMatched()) {
                     setTimerOff()
                     true

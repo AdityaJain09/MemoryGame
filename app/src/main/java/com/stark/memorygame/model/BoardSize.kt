@@ -22,7 +22,7 @@ enum class BoardSize(val pairs: Int) {
 
     fun getTimerInMillis(): Long {
         return when(getTotalPairs()) {
-            4 -> 10_000L
+            4 -> 15_000L
             9 -> 30_000L
             12 -> 55_000L
             14 -> 85_000L

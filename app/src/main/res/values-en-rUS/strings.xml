@@ -7,7 +7,7 @@
     <string name="create_custom_game_title" translatable="false">Create custom memory game</string>
     <string name="download_custom_game" translatable="false">Download custom game</string>
     <string name="invalid_move" translatable="false">Invalid Move</string>
-    <string name="game_already_won" translatable="false">You Already Won the Game !</string>
+    <string name="game_already_won" translatable="false">Game Finished! Start new game</string>
     <string name="game_won" translatable="false">Congratulations, You won the game</string>
     <string name="total_pairs_text" translatable="false">Pairs: %d / %d</string>
     <string name="moves_text" translatable="false">Moves: %d</string>
