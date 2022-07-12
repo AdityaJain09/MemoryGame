@@ -43,4 +43,39 @@
     <string name="no_name_error" translatable="false">Introduce el nombre del juego para descargar</string>
     <string name="developer_name" translatable="false">Creado por Aditya ➡</string>
     <string name="enter_game_name_hint">Enter game name</string>
+    <string name="very_hard_board_size" translatable="false">Muy dura (7 x 4)</string>
+    <string name="time_up_message" translatable="false">Se acabó el tiempo, reinicia el juego para volver a jugar</string>
+    <string name="try_again_message" translatable="false">Estabas tan cerca de ganar, inténtalo de nuevo...</string>
+    <string name="lose_message" translatable="false">Perdiste el juego</string>
+    <string name="mode_time_limit" translatable="false">Límite de tiempo</string>
+    <string name="mode_move_text" translatable="false">Límite de movimientos</string>
+    <string name="mode_normal_text" translatable="false">Normal</string>
+    <string name="mode_title_tv" translatable="false">Modo de juego</string>
+    <string name="user_save_error" translatable="false">No se pudo crear la cuenta</string>
+    <string name="password_error" translatable="false">La contraseña debe tener más de 5 caracteres</string>
+    <string name="password_hint" translatable="false">Introducir la contraseña</string>
+    <string name="tagged_user_error" translatable="false">Etiqueta a un usuario o cambia el tipo de recurso compartido</string>
+    <string name="private_game_message" translatable="false">El juego es solo para usuarios seleccionados.</string>
+    <string name="greet_text" translatable="false">Hola,&#160;</string>
+    <string name="game_list_empty_text" translatable="false">¡La lista de juegos está vacía! Crear juego</string>
+    <string name="mylist" translatable="false">&#160;Juegos</string>
+    <string name="download_game_error" translatable="false">Algo salió mal, mientras descargaba el juego</string>
+    <string name="username_hint" translatable="false">Introduzca su nombre de usuario</string>
+    <string name="create_account" translatable="false">Añadir cuenta</string>
+    <string name="create" translatable="false">Crear</string>
+    <string name="username_validation_error" translatable="false">el nombre de usuario debe tener más de 3 caracteres</string>
+    <string name="username_conflict" translatable="false">nombre de usuario ya tomado</string>
+    <string name="user_created_message" translatable="false">Tu cuenta ha sido creada satisfactoriamente</string>
+    <string name="sub_head" translatable="false">Al crear una cuenta, puede descargar o compartir imágenes de juegos personalizadas</string>
+    <string name="user_account_failure_message" translatable="false">No se pudo crear la cuenta</string>
+    <string name="cancel_registration_process" translatable="false">¿Quieres cancelar la creación de la cuenta?</string>
+    <string name="share_with_text" translatable="false">Compartir juego con</string>
+    <string name="continue_txt" translatable="false">Continuar</string>
+    <string name="back_icon" translatable="false">botón de retroceso</string>
+    <string name="search_user" translatable="false">Usuario de búsqueda</string>
+    <string name="search" translatable="false">Búsqueda</string>
+    <string name="enter_user_name_error" translatable="false">el nombre de usuario no puede estar vacío</string>
+    <string name="username_not_found_error" translatable="false">usuario no encontrado</string>
+    <string name="username_already_added_error" translatable="false">Nombre de usuario ya agregado</string>
+    <string name="download_info_text" translatable="false"><font color="red" />haz clic en el nombre del juego para descargar</string>
 </resources>

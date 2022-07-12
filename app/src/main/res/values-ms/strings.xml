@@ -42,4 +42,39 @@
     <string name="network_error" translatable="false">anda tidak disambungkan ke internet</string>
     <string name="no_name_error" translatable="false">Masukkan nama permainan untuk dimuat turun</string>
     <string name="enter_game_name_hint">Enter game name</string>
+    <string name="very_hard_board_size" translatable="false">Sangat Keras (7 x 4)</string>
+    <string name="download_game_error" translatable="false">Kesilapan telah berlaku semasa memuat turun permainan</string>
+    <string name="username_hint" translatable="false">Masukkan Nama Pengguna</string>
+    <string name="create_account" translatable="false">Tambah akaun</string>
+    <string name="create" translatable="false">Buat</string>
+    <string name="username_validation_error" translatable="false">nama pengguna mestilah lebih daripada 3 aksara</string>
+    <string name="username_conflict" translatable="false">Nama pengguna sudah diambil</string>
+    <string name="user_created_message" translatable="false">Akaun anda telah berjaya dibuat</string>
+    <string name="sub_head" translatable="false">Dengan membuat akaun, anda boleh memuat turun atau berkongsi imej permainan tersuai</string>
+    <string name="user_account_failure_message" translatable="false">Gagal membuat akaun</string>
+    <string name="cancel_registration_process" translatable="false">Adakah anda mahu membatalkan membuat akaun?</string>
+    <string name="share_with_text" translatable="false">Kongsi permainan dengan</string>
+    <string name="continue_txt" translatable="false">teruskan</string>
+    <string name="back_icon" translatable="false">butang belakang</string>
+    <string name="search_user" translatable="false">Search User</string>
+    <string name="search" translatable="false">Cari</string>
+    <string name="enter_user_name_error" translatable="false">nama pengguna tidak boleh kosong</string>
+    <string name="username_not_found_error" translatable="false">Nama pengguna tidak ditemui</string>
+    <string name="username_already_added_error" translatable="false">Nama Pengguna Telah Ditambah</string>
+    <string name="download_info_text" translatable="false"><font color="red" />klik nama permainan untuk memuat turun</string>
+    <string name="mylist" translatable="false">&#160;Permainan</string>
+    <string name="game_list_empty_text" translatable="false">Senarai permainan kosong! Cipta Permainan</string>
+    <string name="greet_text" translatable="false">Hello,&#160;</string>
+    <string name="private_game_message" translatable="false">Permainan adalah untuk pengguna terpilih sahaja.</string>
+    <string name="tagged_user_error" translatable="false">Tag seorang pengguna atau tukar jenis perkongsian</string>
+    <string name="password_hint" translatable="false">Masukkan kata laluan</string>
+    <string name="password_error" translatable="false">Kata laluan hendaklah lebih daripada 5 aksara</string>
+    <string name="user_save_error" translatable="false">Gagal membuat akaun</string>
+    <string name="mode_title_tv" translatable="false">Mod permainan</string>
+    <string name="mode_normal_text" translatable="false">Biasalah</string>
+    <string name="mode_move_text" translatable="false">Had Pergerakan</string>
+    <string name="mode_time_limit" translatable="false">Had masa</string>
+    <string name="lose_message" translatable="false">Anda kehilangan gamea</string>
+    <string name="try_again_message" translatable="false">Anda begitu hampir untuk menang, cuba lagi...</string>
+    <string name="time_up_message" translatable="false">\\Masa sudah tamat, sila mulakan semula permainan untuk bermain semula</string>
 </resources>

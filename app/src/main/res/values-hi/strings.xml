@@ -41,5 +41,40 @@
     <string name="network_error" translatable="false">आप इंटरनेट से कनेक्ट नहीं हैं</string>
     <string name="no_name_error" translatable="false">डाउनलोड करने के लिए गेम का नाम दर्ज करें</string>
     <string name="developer_name" translatable="false">आदित्य द्वारा बनाया गया</string>
-    <string name="enter_game_name_hint">Enter game name</string>
+    <string name="enter_game_name_hint">खेल का नाम दर्ज करें</string>
+    <string name="time_up_message" translatable="false">समय समाप्त हो गया है, कृपया फिर से खेलने के लिए खेल को पुनः आरंभ करें</string>
+    <string name="try_again_message" translatable="false">आप जीत के इतने करीब थे, फिर से कोशिश करें...</string>
+    <string name="lose_message" translatable="false">तुम खेल में हार गये</string>
+    <string name="mode_time_limit" translatable="false">समय सीमा</string>
+    <string name="mode_move_text" translatable="false">चाल सीमा</string>
+    <string name="mode_normal_text" translatable="false">सामान्य</string>
+    <string name="mode_title_tv" translatable="false">खेल मोड</string>
+    <string name="user_save_error" translatable="false">खाता बनाने में विफल</string>
+    <string name="password_error" translatable="false">पासवर्ड 5 वर्णों से अधिक का होना चाहिए</string>
+    <string name="password_hint" translatable="false">पास वर्ड दर्ज करें</string>
+    <string name="download_game_error" translatable="false">गेम डाउनलोड करते समय कुछ गलत हो गया</string>
+    <string name="username_hint" translatable="false">उपयोगकर्ता नाम दर्ज करें</string>
+    <string name="create_account" translatable="false">खाता जोड़ो</string>
+    <string name="create" translatable="false">सृजन करना</string>
+    <string name="username_validation_error" translatable="false">उपयोगकर्ता नाम 3 वर्णों से अधिक होना चाहिए</string>
+    <string name="username_conflict" translatable="false">उपयोगकर्ता नाम पहले ही लिया जा चुका है</string>
+    <string name="user_created_message" translatable="false">आपका खाता सफलतापूर्वक बना दिया गया है</string>
+    <string name="sub_head" translatable="false">खाता बनाकर, आप कस्टम गेम छवियों को डाउनलोड या साझा कर सकते हैं</string>
+    <string name="user_account_failure_message" translatable="false">खाता बनाने में विफल</string>
+    <string name="cancel_registration_process" translatable="false">क्या आप खाता बनाना रद्द करना चाहते हैं?</string>
+    <string name="share_with_text" translatable="false">के साथ खेल साझा करें</string>
+    <string name="continue_txt" translatable="false">जारी रखना</string>
+    <string name="back_icon" translatable="false">पिछला बटन</string>
+    <string name="search_user" translatable="false">उपयोगकर्ता खोजें</string>
+    <string name="search" translatable="false">खोज</string>
+    <string name="enter_user_name_error" translatable="false">उपयोगकर्ता नाम खाली नहीं हो सकता</string>
+    <string name="tagged_user_error" translatable="false">एक उपयोगकर्ता को टैग करें या शेयर प्रकार बदलें</string>
+    <string name="private_game_message" translatable="false">गेम केवल चयनित उपयोगकर्ताओं के लिए है।</string>
+    <string name="greet_text" translatable="false">नमस्कार,&#160;</string>
+    <string name="game_list_empty_text" translatable="false">खेल सूची खाली है! खेल बनाएं</string>
+    <string name="mylist" translatable="false">&#160;खेल</string>
+    <string name="download_info_text" translatable="false"><font color="red" />डाउनलोड करने के लिए गेम के नाम पर क्लिक करें</string>
+    <string name="username_not_found_error" translatable="false">उपयोगकर्ता नाम नहीं मिला</string>
+    <string name="username_already_added_error" translatable="false">उपयोगकर्ता नाम पहले ही जोड़ा जा चुका है</string>
+    <string name="very_hard_board_size" translatable="false">बहुत कठिन (7x 4)</string>
 </resources>

@@ -12,4 +12,5 @@
     <color name="green_darkest">#092B2F</color>
     <color name="green_blue">#428D97</color>
     <color name="pumpkin">#FFFF6D1E</color>
+    <color name="progress_color">#6000CDFF</color>
 </resources>

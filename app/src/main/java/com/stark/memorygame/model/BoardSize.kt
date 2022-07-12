@@ -19,4 +19,14 @@ enum class BoardSize(val pairs: Int) {
     fun getHeight() = pairs / getWidth()
 
     fun getTotalPairs() = pairs / 2
+
+    fun getTimerInMillis(): Long {
+        return when(getTotalPairs()) {
+            4 -> 10_000L
+            9 -> 30_000L
+            12 -> 55_000L
+            14 -> 85_000L
+            else -> throw Exception("Timer can't be set")
+        }
+    }
 }

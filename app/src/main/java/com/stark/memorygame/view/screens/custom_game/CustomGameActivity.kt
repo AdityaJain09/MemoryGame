@@ -21,8 +21,10 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 import com.google.firebase.storage.ktx.storage
 import com.stark.memorygame.R
 import com.stark.memorygame.model.BoardSize
@@ -34,6 +36,7 @@ import com.stark.memorygame.utils.ImageScaler
 import com.stark.memorygame.utils.hasPermission
 import com.stark.memorygame.view.adapter.CustomGameAdapter
 import com.stark.memorygame.view.adapter.ImageClickListener
+import com.stark.memorygame.view.custom_views.GameType
 import com.stark.memorygame.view.extensions.createToast
 import com.stark.memorygame.view.screens.base.BaseActivity
 import com.stark.memorygame.view.state.CustomGameState
@@ -42,29 +45,36 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.log
 
 class CustomGameActivity : BaseActivity() {
 
     private lateinit var boardSize: BoardSize
+    private lateinit var gameType: GameType
     private lateinit var binding: ActivityCustomGameBinding
     private lateinit var customGameAdapter: CustomGameAdapter
     private val images: MutableList<Uri> by lazy { mutableListOf() }
     private lateinit var vm: CustomGameViewModel
-    private var users: Set<String>? = null
-    private lateinit var addUserDialog: AddUserDialog
+    private var tags: Set<String>? = null
     private var shareCategory = GameSharingState.ONLY_ME.option
     private val storage = Firebase.storage
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    private val onSearchingUserListener = object : OnSearchingUserListener {
-        override fun onSearch(username: String) {
-            if (!isNetworkAvailable) {
-                createToast(getString(R.string.network_error)).show()
-                return
+    private val onCheckingInternetAvailability by lazy {
+        object : OnCheckingInternetAvailability {
+            override fun isInternetAvailable(): Boolean {
+                return isNetworkAvailable
             }
-            return searchUser(username)
+        }
+    }
+
+    private val onSaveItemListener: OnSaveItemListener by lazy {
+        object : OnSaveItemListener {
+            override fun onSave(users: Set<String>) {
+                tags = users
+            }
         }
     }
 
@@ -90,7 +100,8 @@ class CustomGameActivity : BaseActivity() {
                 images.add(it)
             }
             customGameAdapter.notifyDataSetChanged()
-            supportActionBar?.title = getString(R.string.photo_choose_title, images.size, boardSize.getTotalPairs())
+            supportActionBar?.title =
+                getString(R.string.photo_choose_title, images.size, boardSize.getTotalPairs())
             binding.btnSave.isEnabled = shouldEnableSaveBtn()
 
         }
@@ -122,10 +133,11 @@ class CustomGameActivity : BaseActivity() {
         observers()
 
         val sharingOptions = resources.getStringArray(R.array.share_with)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, sharingOptions)
+        val adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, sharingOptions)
         binding.autoCompleteTextView.setAdapter(adapter)
 
-        
+
         binding.autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             shareCategory = GameSharingState.values().first { it.option == position }.option
             if (shareCategory == GameSharingState.SELECTED_USERS.option) {
@@ -135,26 +147,12 @@ class CustomGameActivity : BaseActivity() {
     }
 
     private fun openUserSelectionDialog() {
-        if (!::addUserDialog.isInitialized) {
-            addUserDialog = AddUserDialog(
-                this,
-                R.style.fullscreen_theme,
-                users,
-                onSearchingUserListener
-            ) { users ->
-                this.users = users
-            }
-        }
-        addUserDialog.show(supportFragmentManager, "add_user_dialog")
-    }
-
-    private fun searchUser(username: String) {
-        db.collection(USER_COLLECTION).document(username).get().addOnSuccessListener { account ->
-            val isUserFound = account != null && account.data != null
-            addUserDialog?.onSearchCompleted(if (isUserFound) username else null)
-        }.addOnFailureListener {
-            createToast(getString(R.string.server_error)).show()
-        }
+        val dialog = AddUserDialog(
+            tags,
+            onCheckingInternetAvailability = onCheckingInternetAvailability,
+            onSaveItemListener = onSaveItemListener
+        )
+        dialog.show(supportFragmentManager, null)
     }
 
     private fun observers() {
@@ -172,7 +170,8 @@ class CustomGameActivity : BaseActivity() {
 
                     is CustomGameState.Error -> {
                         binding.btnSave.isEnabled = false
-                        binding.etGameName.error = state.error ?: getString(R.string.game_creation_error)
+                        binding.etGameName.error =
+                            state.error ?: getString(R.string.game_creation_error)
                     }
                     CustomGameState.Idle -> {}
                 }
@@ -186,8 +185,13 @@ class CustomGameActivity : BaseActivity() {
                 createToast(getString(R.string.network_error)).show()
                 return@setOnClickListener
             }
+
+            if (shareCategory == GameSharingState.SELECTED_USERS.option && tags.isNullOrEmpty()) {
+                createToast(getString(R.string.tagged_user_error)).show()
+                return@setOnClickListener
+            }
+
             val gameName = binding.etGameName.text.toString().lowercase(Locale.getDefault())
-            // check if game name already taken
             binding.btnSave.isEnabled = false
             db.collection(IMAGES_COLLECTION).document(gameName).get().addOnSuccessListener { doc ->
                 if (doc != null && doc.data != null) {
@@ -220,7 +224,8 @@ class CustomGameActivity : BaseActivity() {
         for ((index, photoUri) in images.withIndex()) {
             Log.i(TAG, "handleImageUploading: $photoUri")
             val imageByteArray = decodeImageToByteArray(photoUri)
-            val filePath = "$ROOT_COLLECTION_NAME/${gameName}/${System.currentTimeMillis()}-${index}.jpg"
+            val filePath =
+                "$ROOT_COLLECTION_NAME/${gameName}/${System.currentTimeMillis()}-${index}.jpg"
             val storageReference = storage.reference.child(filePath)
             storageReference.putBytes(imageByteArray).continueWithTask { task ->
                 Log.i(TAG, "Bytes Uploaded = ${task.result.bytesTransferred}")
@@ -277,7 +282,8 @@ class CustomGameActivity : BaseActivity() {
         val customImages = UserCustomGameImages(
             images = uploadedImages.toList(),
             creator = vm.creator,
-            taggedUsers = users?.toList(),
+            gameType = gameType.name,
+            taggedUsers = tags?.toList(),
             shareType = getShareType(shareCategory)
         )
         db.collection(IMAGES_COLLECTION)
@@ -312,21 +318,31 @@ class CustomGameActivity : BaseActivity() {
 
     private fun decodeImageToByteArray(photoUri: Uri): ByteArray {
         val originalBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+
             val source = ImageDecoder.createSource(contentResolver, photoUri)
             ImageDecoder.decodeBitmap(source)
         } else {
             MediaStore.Images.Media.getBitmap(contentResolver, photoUri)
         }
-        val scaledImage = ImageScaler.scaleToFitHeight(originalBitmap, remoteConfig.getLong("scaled_height").toInt())
+        val scaledImage = ImageScaler.scaleToFitHeight(
+            originalBitmap,
+            remoteConfig.getLong("scaled_height").toInt()
+        )
         val byteArrayOutputStream = ByteArrayOutputStream()
-        scaledImage.compress(Bitmap.CompressFormat.JPEG, remoteConfig.getLong("compress_quality").toInt(), byteArrayOutputStream)
+        scaledImage.compress(
+            Bitmap.CompressFormat.JPEG,
+            remoteConfig.getLong("compress_quality").toInt(),
+            byteArrayOutputStream
+        )
         return byteArrayOutputStream.toByteArray()
     }
 
     private fun initViews() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        boardSize = intent.getSerializableExtra(CUSTOM_GAME_EXTRAS) as BoardSize
-        supportActionBar?.title = getString(R.string.photo_choose_title, 0, boardSize.getTotalPairs())
+        boardSize = intent.getSerializableExtra(CUSTOM_GAME_BOARD_SIZE_EXTRAS) as BoardSize
+        gameType = intent.getSerializableExtra(CUSTOM_GAME_MODE_EXTRAS) as GameType
+        supportActionBar?.title =
+            getString(R.string.photo_choose_title, 0, boardSize.getTotalPairs())
         customGameAdapter = CustomGameAdapter(
             this,
             images,
@@ -369,7 +385,8 @@ class CustomGameActivity : BaseActivity() {
     }
 
     companion object {
-        const val CUSTOM_GAME_EXTRAS = "custom_game_board_size_extras"
+        const val CUSTOM_GAME_BOARD_SIZE_EXTRAS = "custom_game_board_size_extras"
+        const val CUSTOM_GAME_MODE_EXTRAS = "custom_game_mode_extras"
         private const val TAG = "CustomGameActivity"
         private const val READ_EXTERNAL_STORAGE = android.Manifest.permission.READ_EXTERNAL_STORAGE
         private const val MIN_GAME_NAME_LENGTH = 3

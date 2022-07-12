@@ -42,5 +42,40 @@
     <string name="create_custom_game" translatable="false">Создать собственную игру</string>
     <string name="change_board_size_text" translatable="false">Изменить размер доски</string>
     <string name="refresh" translatable="false">Обновить</string>
-    <string name="enter_game_name_hint">Enter game name</string>
+    <string name="enter_game_name_hint">Введите название игры</string>
+    <string name="very_hard_board_size" translatable="false">Очень сложно (7 х 4)</string>
+    <string name="download_game_error" translatable="false">Что-то пошло не так при загрузке игры</string>
+    <string name="username_hint" translatable="false">Введите имя пользователя</string>
+    <string name="create_account" translatable="false">Добавить аккаунт</string>
+    <string name="create" translatable="false">Создавать</string>
+    <string name="username_validation_error" translatable="false">имя пользователя должно быть больше 3 символов</string>
+    <string name="username_conflict" translatable="false">Логин уже занят</string>
+    <string name="user_created_message" translatable="false">Ваша учетная запись успешно создана</string>
+    <string name="sub_head" translatable="false">Создав учетную запись, вы можете загружать или делиться пользовательскими игровыми изображениями.</string>
+    <string name="user_account_failure_message" translatable="false">Не удалось создать учетную запись</string>
+    <string name="cancel_registration_process" translatable="false">Вы хотите отменить создание учетной записи?</string>
+    <string name="share_with_text" translatable="false">Поделитесь игрой с</string>
+    <string name="continue_txt" translatable="false">Продолжать</string>
+    <string name="time_up_message" translatable="false">Время вышло, пожалуйста, перезапустите игру, чтобы начать играть снова</string>
+    <string name="try_again_message" translatable="false">Ты был так близок к победе, попробуй еще раз...</string>
+    <string name="lose_message" translatable="false">Вы проиграли игру</string>
+    <string name="mode_time_limit" translatable="false">Лимит времени</string>
+    <string name="mode_move_text" translatable="false">Лимит ходов</string>
+    <string name="mode_normal_text" translatable="false">Обычный</string>
+    <string name="mode_title_tv" translatable="false">Игровой режим</string>
+    <string name="user_save_error" translatable="false">Не удалось создать учетную запись</string>
+    <string name="password_error" translatable="false">Пароль должен быть больше 5 символов</string>
+    <string name="password_hint" translatable="false">Введите пароль</string>
+    <string name="tagged_user_error" translatable="false">Отметьте одного пользователя или измените тип общего доступа</string>
+    <string name="private_game_message" translatable="false">Игра предназначена только для избранных пользователей.</string>
+    <string name="greet_text" translatable="false">Здравствуйте,&#160;</string>
+    <string name="game_list_empty_text" translatable="false">Список игр пуст! Создать игру</string>
+    <string name="mylist" translatable="false">&#160;Игры</string>
+    <string name="download_info_text" translatable="false"><font color="red" />нажмите на название игры, чтобы скачать</string>
+    <string name="username_already_added_error" translatable="false">Имя пользователя уже добавлено</string>
+    <string name="username_not_found_error" translatable="false">Имя пользователя не найдено</string>
+    <string name="enter_user_name_error" translatable="false">имя пользователя не может быть пустым</string>
+    <string name="search" translatable="false">Поиск</string>
+    <string name="search_user" translatable="false">Поиск пользователя</string>
+    <string name="back_icon" translatable="false">Кнопка назад</string>
 </resources>

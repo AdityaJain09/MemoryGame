@@ -7,6 +7,7 @@ import com.stark.memorygame.data.UserDataSource
 import com.stark.memorygame.model.BoardSize
 import com.stark.memorygame.model.MemoryCard
 import com.stark.memorygame.utils.Constants
+import com.stark.memorygame.view.custom_views.GameType
 import com.stark.memorygame.view.intent.MemoryCardGameIntent
 import com.stark.memorygame.view.state.GameStatus
 import com.stark.memorygame.view.state.MemoryCardGameState
@@ -14,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -27,14 +27,22 @@ class MainViewModel @Inject constructor(
     var userName: String? = null
         private set
 
+    var movesState: GameTypeMoveWinState? = null
+        private set
+
     @Volatile
     var gameNames: MutableSet<String> = mutableSetOf()
         private set
 
-    var myGames: MutableList<String> = mutableListOf()
+    var myGames: MutableSet<String> = mutableSetOf()
         private set
 
-    fun mygames(id: String) {
+    private var isTimeLeft: Boolean = true
+
+    private val _timerState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val timerState: StateFlow<Boolean> = _timerState.asStateFlow()
+
+    fun addMyGames(id: String) {
         myGames.add(id)
     }
 
@@ -56,13 +64,14 @@ class MainViewModel @Inject constructor(
     var boardSize: BoardSize = BoardSize.EASY
         private set
 
+    var gameType: GameType = GameType.Normal
+        private set
+
     private var customImages: List<String>? = null
 
     init {
         viewModelScope.launch {
             initCards()
-            userName = getUser()
-            _state.emit(MemoryCardGameState.OnDownloadGameNames)
             handleIntent()
         }
     }
@@ -71,13 +80,20 @@ class MainViewModel @Inject constructor(
         gameNames.add(name)
     }
 
-    private suspend fun getUser(): String? {
+    fun fetchUserDetails() {
+        viewModelScope.launch {
+            setUser()
+        }
+    }
+
+    private suspend fun setUser() {
         return withContext(Dispatchers.IO) {
             return@withContext try {
-                userDataSource.getUserName().firstOrNull()
+                userName = userDataSource.getUserName().firstOrNull()
+                _state.emit(MemoryCardGameState.OnFetchingUsername)
             } catch (e: Exception) {
-                // TODO: let user know why u failed to fetch username
-                null
+                Log.i( "MainViewModel","fetching username from datastore failed ${e.message}")
+                _state.emit(MemoryCardGameState.Error("Failed to fetch Username"))
             }
         }
     }
@@ -107,11 +123,23 @@ class MainViewModel @Inject constructor(
 
     }
 
+    fun setTimeLeft(isLeft: Boolean) {
+        isTimeLeft = isLeft
+    }
+
     private suspend fun handleIntent() {
         userIntent.consumeAsFlow().collect {
             when (it) {
                 is MemoryCardGameIntent.OnGameCardClick -> {
                     withContext(Dispatchers.IO) {
+
+                        if (gameType == GameType.TimeLimit && !isTimeLeft) {
+                            return@withContext
+                        }
+
+                        if (gameType == GameType.TimeLimit && !timerState.value) {
+                            _timerState.emit(true)
+                        }
                         updateCurrentCard(it.position)
                         _state.emit(MemoryCardGameState.CardStateChange(it.position))
                     }
@@ -135,8 +163,10 @@ class MainViewModel @Inject constructor(
         _gameStatusState.emit(GameStatus.MovesAndPairs(getTotalMoves(), pairsMatched))
     }
 
-    fun setBoardSize(size: BoardSize) {
+    fun setSetting(size: BoardSize, type: GameType) {
         boardSize = size
+        gameType = type
+
         viewModelScope.launch {
             reset()
             _state.emit(MemoryCardGameState.OnGameReset(cards))
@@ -177,22 +207,81 @@ class MainViewModel @Inject constructor(
     private fun reset() {
         initCards()
         moves = 0
+        isTimeLeft = true
+        _timerState.value = false
         lastPickedCard = null
         pairsMatched = 0
     }
 
-    fun isGameWon(): Boolean {
+    fun isGameOver(): Boolean {
+        return when (gameType) {
+            GameType.Normal -> {
+                isAllPairsMatched()
+            }
+            GameType.Moves -> {
+                getMovesLimitScore()
+                isAllPairsMatched()
+            }
+            GameType.TimeLimit -> {
+                if (isAllPairsMatched()) {
+                    setTimerOff()
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+    }
+
+    private fun setTimerOff() {
+        viewModelScope.launch {
+            _timerState.emit(false)
+        }
+    }
+
+    private fun isAllPairsMatched(): Boolean {
         return boardSize.getTotalPairs() == pairsMatched
     }
 
-    fun canPlay() = getTotalMoves() > 0 && !isGameWon()
+    private fun getMovesLimitScore() {
+        movesState = when {
+            (getWinnerMaxMoves().first >= getTotalMoves()) -> GameTypeMoveWinState.WINNER
+            ((getWinnerMaxMoves().first < getTotalMoves()) && (getWinnerMaxMoves().second >= getTotalMoves())) ->
+                GameTypeMoveWinState.TRY_BETTER
+            else -> GameTypeMoveWinState.LOSER
+        }
+    }
+
+    private fun getWinnerMaxMoves(): Pair<Int, Int> {
+        return when(boardSize.getTotalPairs()) {
+            4 -> 6 to 8
+            9 -> 16 to 20
+            12 -> 24 to 28
+            14 -> 30 to 35
+            else -> 150 to 150
+        }
+    }
+
+    fun canPlay() = getTotalMoves() > 0 && !isAllPairsMatched()
 
     private fun getTotalMoves(): Int {
         return moves / 2
     }
 
+    fun getTimer(): Long {
+        return when(boardSize) {
+            BoardSize.EASY -> boardSize.getTimerInMillis()
+            BoardSize.MEDIUM -> boardSize.getTimerInMillis()
+            BoardSize.HARD -> boardSize.getTimerInMillis()
+            BoardSize.VERY_HARD -> boardSize.getTimerInMillis()
+        }
+    }
+
     fun isCardAlreadyFaceUp(position: Int): Boolean = cards[position].isFaceUp
 
     fun checkIfAccountCreated(): Boolean = userName != null
+}
 
+enum class GameTypeMoveWinState {
+    WINNER, TRY_BETTER, LOSER
 }

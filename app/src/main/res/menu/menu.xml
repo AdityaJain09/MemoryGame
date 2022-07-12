@@ -27,6 +27,6 @@
         android:title="@string/download_custom_game" />
     <item
         android:id="@+id/mi_about"
-        android:title="@string/developer_name" />
+        android:title="" />
 
 </menu>

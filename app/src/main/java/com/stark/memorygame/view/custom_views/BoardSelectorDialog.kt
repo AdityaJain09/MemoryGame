@@ -19,7 +19,7 @@ import com.stark.memorygame.view.common.DialogHelper
 import org.w3c.dom.Text
 
 interface OnBoardSizeSelectListener {
-    fun onSelect(size: BoardSize)
+    fun onSelect(size: BoardSize, type: GameType)
 }
 
 interface OnDownloadGameListener {
@@ -30,7 +30,7 @@ class BoardSelectorDialog(
     private val ctx: Context,
     onBoardSizeSelectListener: OnBoardSizeSelectListener? = null,
     onDownloadGameListener: OnDownloadGameListener? = null,
-    private val currentBoardSize: BoardSize? = null,
+    private val currentSetting: Pair<BoardSize, GameType>? = null,
     private val isGameDownloadable: Boolean = true,
     private val title: String,
     inline val downloadGameList: List<String> = listOf(),
@@ -39,6 +39,7 @@ class BoardSelectorDialog(
 
     private lateinit var radioBtnGroup: RadioGroup
     private lateinit var titleTv: TextView
+    private lateinit var gameTypeRadioGroup: RadioGroup
     private lateinit var downloadListAdapter: DownloadGameAdapter
     private lateinit var downloadRv: RecyclerView
     private lateinit var boardSizeSelectListener: OnBoardSizeSelectListener
@@ -58,29 +59,40 @@ class BoardSelectorDialog(
         if (resourceId == R.layout.dialog_board_size) {
             view = LayoutInflater.from(ctx).inflate(resourceId, null)
             radioBtnGroup = view.findViewById(R.id.radioGroupSize)
+            gameTypeRadioGroup = view.findViewById(R.id.gameTypeGroup)
             titleTv = view.findViewById(R.id.title)
             titleTv.text = title
-            radioBtnGroup.check(
-                when(currentBoardSize) {
-                    BoardSize.EASY -> R.id.rbEasy
-                    BoardSize.MEDIUM -> R.id.rbMedium
-                    BoardSize.HARD -> R.id.rbHard
-                    else -> R.id.rbVeryHard
-                })
+            currentSetting?.let { setting ->
+                radioBtnGroup.check(
+                    when (setting.first) {
+                        BoardSize.EASY -> R.id.rbEasy
+                        BoardSize.MEDIUM -> R.id.rbMedium
+                        BoardSize.HARD -> R.id.rbHard
+                        else -> R.id.rbVeryHard
+                    }
+                )
+
+                gameTypeRadioGroup.check(
+                    when (currentSetting.second) {
+                        GameType.Normal -> R.id.rbNormal
+                        GameType.Moves -> R.id.rbMoves
+                        else -> R.id.rbTimeLimit
+                    }
+                )
+            }
         } else {
             view = LayoutInflater.from(ctx).inflate(resourceId, null)
             etDownloadGame = view.findViewById(R.id.etDownloadGame)
             val infoText = view.findViewById<TextView>(R.id.info)
-            val title = view.findViewById<TextView>(R.id.title_tv)
+            val titleTv = view.findViewById<TextView>(R.id.title_tv)
             val emptyGameTv = view.findViewById<TextView>(R.id.empty_rv_tv)
             downloadRv = view.findViewById(R.id.download_list_rv)
-
+            titleTv.text = title
             if (downloadGameList.isEmpty()) {
                 emptyGameTv.visibility = View.VISIBLE
             }
 
             if (!isGameDownloadable) {
-                title.text = ctx.getString(R.string.mylist)
                 infoText.visibility = View.GONE
                 etDownloadGame.visibility = View.GONE
             }
@@ -111,14 +123,21 @@ class BoardSelectorDialog(
             negativeBtnText = ctx.getString(R.string.close),
             positionBtnText = if (isGameDownloadable) ctx.getString(R.string.confirm) else null,
             onPositiveClick = {
-                if (currentBoardSize != null) {
+                if (currentSetting != null) {
                     val boardSize: BoardSize = when (radioBtnGroup.checkedRadioButtonId) {
                         R.id.rbEasy -> BoardSize.EASY
                         R.id.rbMedium -> BoardSize.MEDIUM
                         R.id.rbHard -> BoardSize.HARD
                         else -> BoardSize.VERY_HARD
                     }
-                    boardSizeSelectListener.onSelect(boardSize)
+
+                    val gametype: GameType = when(gameTypeRadioGroup.checkedRadioButtonId) {
+                        R.id.rbNormal -> GameType.Normal
+                        R.id.rbMoves -> GameType.Moves
+                        else -> GameType.TimeLimit
+                    }
+
+                    boardSizeSelectListener.onSelect(boardSize, gametype)
                 } else {
                     gameName = etDownloadGame.text.toString()
                     downloadGameListener.onDownloadGame(gameName)
@@ -127,4 +146,8 @@ class BoardSelectorDialog(
         )
         DialogHelper.AlertDialogBuilder(dialogHelper).build()
     }
+}
+
+enum class GameType {
+    Normal, Moves, TimeLimit
 }

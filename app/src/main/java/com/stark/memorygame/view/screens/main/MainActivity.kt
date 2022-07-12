@@ -3,11 +3,12 @@ package com.stark.memorygame.view.screens.main
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -32,6 +33,7 @@ import com.stark.memorygame.view.adapter.MemoryCardClickListener
 import com.stark.memorygame.view.adapter.MemoryGameAdapter
 import com.stark.memorygame.view.common.DialogHelper
 import com.stark.memorygame.view.custom_views.BoardSelectorDialog
+import com.stark.memorygame.view.custom_views.GameType
 import com.stark.memorygame.view.custom_views.OnBoardSizeSelectListener
 import com.stark.memorygame.view.custom_views.OnDownloadGameListener
 import com.stark.memorygame.view.extensions.createToast
@@ -40,7 +42,8 @@ import com.stark.memorygame.view.extensions.showSnackBar
 import com.stark.memorygame.view.intent.MemoryCardGameIntent
 import com.stark.memorygame.view.screens.base.BaseActivity
 import com.stark.memorygame.view.screens.custom_game.CustomGameActivity
-import com.stark.memorygame.view.screens.custom_game.CustomGameActivity.Companion.CUSTOM_GAME_EXTRAS
+import com.stark.memorygame.view.screens.custom_game.CustomGameActivity.Companion.CUSTOM_GAME_BOARD_SIZE_EXTRAS
+import com.stark.memorygame.view.screens.custom_game.CustomGameActivity.Companion.CUSTOM_GAME_MODE_EXTRAS
 import com.stark.memorygame.view.screens.custom_game.CustomGameActivity.Companion.GAME_NAME_EXTRA
 import com.stark.memorygame.view.screens.custom_game.GameSharingState
 import com.stark.memorygame.view.screens.registration.RegistrationActivity
@@ -48,6 +51,7 @@ import com.stark.memorygame.view.state.GameStatus
 import com.stark.memorygame.view.state.MemoryCardGameState
 import com.stark.memorygame.view.viewmodel.ViewModelFactory
 import kotlinx.coroutines.*
+import java.util.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -55,6 +59,8 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var gameAdapter: MemoryGameAdapter
     private lateinit var vm: MainViewModel
+    private lateinit var menu: Menu
+    private var countDownTimer: CountDownTimer? = null
     private var boardSelectorDialog: BoardSelectorDialog? = null
     private var menuSelectState: MenuSelectState = MenuSelectState.BOARD_SIZE
     private lateinit var confettiManager: ConfettiManager
@@ -62,6 +68,7 @@ class MainActivity : BaseActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val TIMER_DELAY = 1_000L
     }
 
     @Inject
@@ -103,16 +110,17 @@ class MainActivity : BaseActivity() {
 
     private val boardSizeSelectListener by lazy {
         object : OnBoardSizeSelectListener {
-            override fun onSelect(size: BoardSize) {
+            override fun onSelect(size: BoardSize, gameType: GameType) {
                 gameName = null
                 vm.setCustomCards(null)
-                Log.i(TAG, "onSelect: boardsize = $size")
                 if (menuSelectState != MenuSelectState.CUSTOM_NEW_GAME) {
-                    vm.setBoardSize(size)
+                    vm.setSetting(size, gameType)
+                    shouldTimerVisible()
                     return
                 }
                 val intent = Intent(this@MainActivity, CustomGameActivity::class.java)
-                intent.putExtra(CUSTOM_GAME_EXTRAS, size)
+                intent.putExtra(CUSTOM_GAME_BOARD_SIZE_EXTRAS, size)
+                intent.putExtra(CUSTOM_GAME_MODE_EXTRAS, gameType)
                 customGameContract.launch(intent)
             }
         }
@@ -124,10 +132,15 @@ class MainActivity : BaseActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         vm = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        shouldTimerVisible()
         initViews()
         updateGamePairs()
         updatedGameMoves()
         observers()
+    }
+
+    private fun shouldTimerVisible() {
+        binding.timer.visibility = if (vm.gameType != GameType.TimeLimit) View.GONE else View.VISIBLE
     }
 
     private fun downloadGameNames() {
@@ -141,7 +154,7 @@ class MainActivity : BaseActivity() {
                         vm.addGameNames(doc.id)
                     }
                 }.addOnFailureListener {
-                    Log.e(TAG, "Failed to download game list of share type everyone due to ", it )
+                    Log.e(TAG, "Failed to download game list of share type everyone due to ", it)
                 }
 
             collection.whereArrayContains("taggedUsers", userName)
@@ -152,7 +165,7 @@ class MainActivity : BaseActivity() {
                     }
 
                 }.addOnFailureListener {
-                    Log.e(TAG, "Failed to download game list of tagged users due to ", it )
+                    Log.e(TAG, "Failed to download game list of tagged users due to ", it)
                 }
 
         }
@@ -164,28 +177,32 @@ class MainActivity : BaseActivity() {
         db.collection(IMAGES_COLLECTION).document(customGameName).get()
             .addOnSuccessListener { document ->
                 val downloadedCustomImages = document.toObject(UserCustomGameImages::class.java)
-                val images = downloadedCustomImages?.images
-                Log.i(TAG, "downloadGame: $downloadedCustomImages")
-                if (images == null) {
-                    Log.e(TAG, "Failed to fetch $customGameName from firestore")
-                    createToast(
-                        String.format(
-                            getString(
-                                R.string.game_not_found_error,
-                                customGameName
-                            )
-                        ), Toast.LENGTH_SHORT
-                    ).show()
-                    return@addOnSuccessListener
+                if (downloadedCustomImages != null && canDownloadGame(downloadedCustomImages)) {
+                    val images = downloadedCustomImages?.images
+                    Log.i(TAG, "downloadGame: $downloadedCustomImages")
+                    if (images == null) {
+                        Log.e(TAG, "Failed to fetch $customGameName from firestore")
+                        createToast(
+                            String.format(
+                                getString(
+                                    R.string.game_not_found_error,
+                                    customGameName
+                                )
+                            ), Toast.LENGTH_SHORT
+                        ).show()
+                        return@addOnSuccessListener
+                    }
+                    val totalCards = images.size * 2
+                    vm.setCustomCards(images)
+                    cacheImages(images)
+                    gameName = customGameName
+                    firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_SUCCESS) {
+                        param(GAME_NAME, customGameName)
+                    }
+                    vm.setSetting(getBoardSizeValue(totalCards), getGameType(downloadedCustomImages.gameType))
+                } else {
+                    createToast(getString(R.string.private_game_message), Toast.LENGTH_SHORT).show()
                 }
-                val totalCards = images.size * 2
-                vm.setCustomCards(images)
-                cacheImages(images)
-                gameName = customGameName
-                firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_SUCCESS) {
-                    param(GAME_NAME, customGameName)
-                }
-                vm.setBoardSize(getBoardSizeValue(totalCards))
             }.addOnFailureListener {
                 Log.i(TAG, "downloadGame: failure")
                 firebaseAnalytics.logEvent(DOWNLOAD_CUSTOM_GAME_ERROR) {
@@ -193,6 +210,23 @@ class MainActivity : BaseActivity() {
                 }
                 Log.e(TAG, "downloadGame failed ", it)
             }
+    }
+
+    private fun getGameType(gameType: String?): GameType {
+        return gameType?.let {
+            GameType.values().first { it.name == gameType }
+        } ?: GameType.Normal
+    }
+
+    private fun canDownloadGame(customGame: UserCustomGameImages): Boolean {
+        return vm.userName?.let { userName ->
+            when (customGame.shareType) {
+                GameSharingState.ONLY_ME.name -> customGame.creator == userName
+                GameSharingState.SELECTED_USERS.name -> (customGame.taggedUsers!!.contains(userName) || customGame.creator == vm.userName)
+                GameSharingState.EVERYONE.name -> true
+                else -> false
+            }
+        } ?: false
     }
 
     private fun cacheImages(images: List<String>) {
@@ -223,7 +257,11 @@ class MainActivity : BaseActivity() {
             vm.cards,
             object : MemoryCardClickListener {
                 override fun onCardClick(position: Int) {
-                    if (vm.isGameWon()) {
+                    if (vm.isGameOver()) {
+                        if (vm.gameType == GameType.TimeLimit) {
+                            binding.root.showSnackBar(getString(R.string.time_up_message)).show()
+                            return
+                        }
                         binding.root.showSnackBar(getString(R.string.game_already_won)).show()
                         return
                     }
@@ -246,12 +284,32 @@ class MainActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
+        if (menu != null) {
+            this.menu = menu
+        }
+        vm.fetchUserDetails()
         return true
+    }
+
+    private fun timer() {
+        countDownTimer?.cancel()
+        countDownTimer = object : CountDownTimer(vm.getTimer(),  TIMER_DELAY) {
+            override fun onTick(leftTime: Long) {
+                binding.timer.progress = ((leftTime *100) / vm.getTimer()).toInt();
+            }
+
+            override fun onFinish() {
+                binding.timer.progress = ((vm.getTimer() * 100) / 100).toInt()
+                binding.root.showSnackBar(getString(R.string.time_up_message)).show()
+                vm.setTimeLeft(false)
+            }
+        }.start()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.mi_refresh -> {
+                downloadGameNames()
                 if (::confettiManager.isInitialized) confettiManager.terminate()
                 if (vm.canPlay())
                     alertDialog()
@@ -264,7 +322,7 @@ class MainActivity : BaseActivity() {
                 boardSelectorDialog = BoardSelectorDialog(
                     this,
                     onBoardSizeSelectListener = boardSizeSelectListener,
-                    currentBoardSize = vm.boardSize,
+                    currentSetting = vm.boardSize to vm.gameType,
                     title = getString(R.string.change_board_size_text),
                     resourceId = R.layout.dialog_board_size
                 )
@@ -279,7 +337,7 @@ class MainActivity : BaseActivity() {
                 boardSelectorDialog = BoardSelectorDialog(
                     this,
                     onBoardSizeSelectListener = boardSizeSelectListener,
-                    currentBoardSize = vm.boardSize,
+                    currentSetting = vm.boardSize to vm.gameType,
                     title = getString(R.string.create_custom_game_title),
                     resourceId = R.layout.dialog_board_size
                 )
@@ -287,12 +345,21 @@ class MainActivity : BaseActivity() {
 
                 return true
             }
-            R.id.mi_download -> initDownload(vm.gameNames.toList())
-            R.id.mi_list -> initDownload(vm.myGames.toList(), false)
+            R.id.mi_download -> {
+                initDownload(
+                    getString(R.string.download_game),
+                    vm.gameNames.toList()
+                )
+            }
+            R.id.mi_list -> initDownload(
+                (vm.userName ?: "My").plus(getString(R.string.mylist)),
+                vm.myGames.toList(),
+                false
+            )
             R.id.mi_about -> {
-                firebaseAnalytics.logEvent("open_about", null)
-                val aboutLink = remoteConfig.getString("about_link")
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(aboutLink)))
+                if (item.title == getString(R.string.create_account)) {
+                    registerAccount()
+                }
             }
 
             else -> super.onOptionsItemSelected(item)
@@ -301,7 +368,11 @@ class MainActivity : BaseActivity() {
         return true
     }
 
-    private fun initDownload(gameList: List<String>, isDownloadable: Boolean = true): Boolean {
+    private fun initDownload(
+        title: String,
+        gameList: List<String>,
+        isDownloadable: Boolean = true
+    ): Boolean {
         if (!vm.checkIfAccountCreated()) {
             registerAccount()
             return false
@@ -310,12 +381,16 @@ class MainActivity : BaseActivity() {
         boardSelectorDialog = BoardSelectorDialog(
             this,
             onDownloadGameListener = downloadGameListener,
-            title = getString(R.string.download_game),
+            title = title.capitalizeText(),
             isGameDownloadable = isDownloadable,
             resourceId = R.layout.dialog_download_board,
             downloadGameList = gameList
         )
         return true
+    }
+
+    private fun String.capitalizeText(): String {
+        return replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     }
 
     private fun registerAccount() {
@@ -339,6 +414,8 @@ class MainActivity : BaseActivity() {
             negativeBtnText = getString(R.string.no),
             positionBtnText = getString(R.string.yes),
             onPositiveClick = {
+                binding.timer.progress = ((vm.getTimer() * 100) / 100).toInt()
+                vm.setTimeLeft(true)
                 refresh()
             }
         )
@@ -354,32 +431,62 @@ class MainActivity : BaseActivity() {
                         is MemoryCardGameState.Idle -> {
                         }
                         is MemoryCardGameState.Loading -> {}
+                        is MemoryCardGameState.OnFetchingUsername -> {
+                            menu.findItem(R.id.mi_about)?.title = if (vm.userName == null) {
+                                getString(R.string.create_account)
+                            } else {
+                                getString(R.string.greet_text).plus(vm.userName?.capitalizeText())
+                            }
+                            downloadGameNames()
+                        }
                         is MemoryCardGameState.CardStateChange -> {
                             gameAdapter.notifyDataSetChanged()
-                            if (vm.isGameWon()) {
-                                confettiManager = CommonConfetti.rainingConfetti(
-                                    binding.clRoot,
-                                    intArrayOf(Color.YELLOW, Color.BLUE, Color.MAGENTA)
-                                ).oneShot()
-                                binding.root.showSnackBar(getString(R.string.game_won_message))
-                                    .show()
-                            }
-                        }
+                            if (vm.isGameOver()) {
+                                when(vm.gameType) {
+                                    GameType.Normal -> {
+                                        winnerMessage()
+                                    }
 
-                        is MemoryCardGameState.OnDownloadGameNames -> {
-                            downloadGameNames()
+                                    GameType.Moves -> {
+                                        when (vm.movesState) {
+                                            GameTypeMoveWinState.WINNER -> winnerMessage()
+                                            GameTypeMoveWinState.TRY_BETTER ->
+                                                binding.root.showSnackBar(getString(R.string.try_again_message)).show()
+                                            else ->
+                                                binding.root.showSnackBar(getString(R.string.lose_message)).show()
+
+                                        }
+                                    }
+
+                                    GameType.TimeLimit -> {
+                                        winnerMessage()
+                                        binding.timer.progress = ((vm.getTimer() * 100) / 100).toInt()
+                                    }
+                                }
+                            }
                         }
 
                         is MemoryCardGameState.OnGameReset -> {
                             initViews()
                             updateGamePairs()
                             updatedGameMoves()
+                            shouldTimerVisible()
                             gameAdapter.notifyDataSetChanged()
                         }
 
                         is MemoryCardGameState.Error -> {
                             binding.root.showSnackBar(it.error ?: "Unknown Error").show()
                         }
+                    }
+                }
+            }
+
+            launch {
+                vm.timerState.collect { state ->
+                    if (state) {
+                        timer()
+                    } else {
+                        countDownTimer?.cancel()
                     }
                 }
             }
@@ -398,6 +505,15 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    private fun winnerMessage() {
+        confettiManager = CommonConfetti.rainingConfetti(
+            binding.clRoot,
+            intArrayOf(Color.YELLOW, Color.BLUE, Color.MAGENTA)
+        ).oneShot()
+        binding.root.showSnackBar(getString(R.string.game_won_message))
+            .show()
+    }
+
     private fun downloadMyGamesOnly(collection: CollectionReference, userName: String) {
         collection.whereEqualTo("creator", userName)
             .get()
@@ -405,16 +521,17 @@ class MainActivity : BaseActivity() {
                 it.documents.forEachIndexed { _, doc ->
                     Log.i(TAG, "downloadGameNames: creator = $doc.id")
                     vm.addGameNames(doc.id)
-                    vm.mygames(doc.id)
+                    vm.addMyGames(doc.id)
                 }
             }.addOnFailureListener {
-                Log.e(TAG, "Failed to download game list of creators due to ", it )
+                Log.e(TAG, "Failed to download game list of creators due to ", it)
             }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         job.cancel()
+        countDownTimer?.cancel()
         boardSelectorDialog = null
     }
 
@@ -432,5 +549,5 @@ class MainActivity : BaseActivity() {
 }
 
 enum class MenuSelectState {
-    BOARD_SIZE, CUSTOM_NEW_GAME, DOWNLOAD_CUSTOM_GAME, CREATE_ACCOUNT
+    BOARD_SIZE, CUSTOM_NEW_GAME, DOWNLOAD_CUSTOM_GAME
 }

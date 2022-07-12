@@ -41,4 +41,39 @@
     <string name="network_error" translatable="false">तुम्ही इंटरनेटशी कनेक्ट केलेले नाही</string>
     <string name="no_name_error" translatable="false">डाउनलोड करण्यासाठी गेमचे नाव प्रविष्ट करा</string>
     <string name="enter_game_name_hint">Enter game name</string>
+    <string name="very_hard_board_size" translatable="false">खूप कठीण (७ x ४)</string>
+    <string name="download_game_error" translatable="false">गेम डाउनलोड करताना काहीतरी चूक झाली</string>
+    <string name="username_hint" translatable="false">वापरकर्तानाव प्रविष्ट करा</string>
+    <string name="create_account" translatable="false">खाते जोडा</string>
+    <string name="create" translatable="false">तयार करा</string>
+    <string name="username_validation_error" translatable="false">वापरकर्तानाव 3 वर्णांपेक्षा जास्त असणे आवश्यक आहे</string>
+    <string name="username_conflict" translatable="false">वापरकर्तानाव आधीच घेतले आहे</string>
+    <string name="user_created_message" translatable="false">तुमचे खाते यशस्वीरित्या तयार केले गेले आहे</string>
+    <string name="sub_head" translatable="false">खाते तयार करून, तुम्ही सानुकूल गेम इमेज डाउनलोड किंवा शेअर करू शकता</string>
+    <string name="user_account_failure_message" translatable="false">खाते तयार करण्यात अयशस्वी</string>
+    <string name="cancel_registration_process" translatable="false">तुम्हाला खाते तयार करणे रद्द करायचे आहे का?</string>
+    <string name="share_with_text" translatable="false">सह गेम सामायिक करा</string>
+    <string name="time_up_message" translatable="false">वेळ संपली आहे, कृपया पुन्हा खेळण्यासाठी गेम रीस्टार्ट करा</string>
+    <string name="try_again_message" translatable="false">तुम्ही जिंकण्याच्या खूप जवळ आहात, पुन्हा प्रयत्न करा...</string>
+    <string name="lose_message" translatable="false">तुम्ही खेळ हरलात</string>
+    <string name="mode_time_limit" translatable="false">वेळेची मर्यादा</string>
+    <string name="mode_move_text" translatable="false">हालचाल मर्यादा</string>
+    <string name="mode_normal_text" translatable="false">सामान्य</string>
+    <string name="mode_title_tv" translatable="false">गेम मोड</string>
+    <string name="user_save_error" translatable="false">खाते तयार करण्यात अयशस्वी</string>
+    <string name="password_error" translatable="false">पासवर्ड 5 वर्णांपेक्षा जास्त असावा</string>
+    <string name="password_hint" translatable="false">पासवर्ड टाका</string>
+    <string name="tagged_user_error" translatable="false">एका वापरकर्त्याला टॅग करा किंवा शेअर प्रकार बदला</string>
+    <string name="private_game_message" translatable="false">गेम केवळ निवडक वापरकर्त्यांसाठी आहे.</string>
+    <string name="greet_text" translatable="false">नमस्कार,&#160;</string>
+    <string name="mylist" translatable="false">&#160;खेळ</string>
+    <string name="game_list_empty_text" translatable="false">खेळ यादी रिक्त आहे! गेम तयार करा</string>
+    <string name="download_info_text" translatable="false"><font color="red" />डाउनलोड करण्यासाठी गेमच्या नावावर क्लिक करा</string>
+    <string name="username_already_added_error" translatable="false">वापरकर्तानाव आधीच जोडले आहे</string>
+    <string name="username_not_found_error" translatable="false">वापरकर्तानाव आढळले नाही</string>
+    <string name="enter_user_name_error" translatable="false">वापरकर्तानाव रिक्त असू शकत नाही</string>
+    <string name="search" translatable="false">शोधा</string>
+    <string name="search_user" translatable="false">वापरकर्ता शोधा</string>
+    <string name="back_icon" translatable="false">मागे बटण</string>
+    <string name="continue_txt" translatable="false">पुष्टी</string>
 </resources>

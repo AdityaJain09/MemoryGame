@@ -10,12 +10,11 @@
         android:id="@+id/title_tv"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="16dp"
-        android:layout_gravity="start"
         android:layout_height="wrap_content"
-        android:text="@string/create_account"
-        />
+        android:layout_gravity="start"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/create_account" />
 
     <TextView
         android:id="@+id/sub_title_tv"
@@ -44,10 +43,34 @@
         android:imeOptions="actionDone"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
-        android:maxLines="1"
         android:maxLength="24"
+        android:maxLines="1"
         android:minHeight="48dp"
         android:textColorHint="#757575" />
+
+    <EditText
+        android:id="@+id/password_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/username_et"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="@string/password_hint"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="textPassword"
+        android:maxLength="16"
+        android:maxLines="1"
+        android:minHeight="48dp"
+        android:textColorHint="#757575" />
+
+    <TextView
+        android:id="@+id/two_factor_auth_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <ProgressBar
         android:id="@+id/new_user_pb"
@@ -66,6 +89,5 @@
         android:layout_marginEnd="16dp"
         android:enabled="true"
         android:text="@string/create" />
-
 
 </RelativeLayout>
